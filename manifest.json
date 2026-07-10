@@ -1,0 +1,13 @@
+{
+  "domain": "intimacy",
+  "name": "亲密空间",
+  "version": "5.3.0",
+  "documentation": "https://github.com/home-assistant/example-custom-config",
+  "issue_tracker": "https://github.com/home-assistant/example-custom-config/issues",
+  "dependencies": [],
+  "requirements": [],
+  "codeowners": [],
+  "iot_class": "local_polling",
+  "config_flow": true,
+  "icon": "icon.png"
+}

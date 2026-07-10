@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" version="1.1"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff9ec4;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ff6b9d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e91e63;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="shineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- 背景圆角矩形 -->
+  <rect x="40" y="40" width="432" height="432" rx="88" ry="88" fill="#1a1a2e"/>
+  <rect x="44" y="44" width="424" height="424" rx="84" ry="84" fill="#16213e"/>
+
+  <!-- 心形主体（贝塞尔曲线绘制） -->
+  <path d="M 256 400
+           C 256 400, 100 300, 100 190
+           C 100 110, 170 80, 220 110
+           C 240 122, 256 145, 256 145
+           C 256 145, 272 122, 292 110
+           C 342 80, 412 110, 412 190
+           C 412 300, 256 400, 256 400 Z"
+        fill="url(#heartGrad)"
+        filter="url(#glow)"/>
+
+  <!-- 心形高光 -->
+  <path d="M 150 160
+           C 150 130, 180 110, 210 130
+           C 225 140, 235 160, 235 160"
+        fill="none"
+        stroke="url(#shineGrad)"
+        stroke-width="10"
+        stroke-linecap="round"/>
+
+  <!-- 装饰小圆点 -->
+  <circle cx="320" cy="140" r="8" fill="rgba(255,255,255,0.7)"/>
+  <circle cx="345" cy="165" r="5" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="175" cy="155" r="6" fill="rgba(255,255,255,0.5)"/>
+
+  <!-- 心形中心文字 "V10" -->
+  <text x="256" y="235"
+        font-family="Arial, sans-serif"
+        font-size="52"
+        font-weight="bold"
+        fill="white"
+        text-anchor="middle"
+        opacity="0.25">V10</text>
+</svg>

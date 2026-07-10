@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>亲密空间</title>
+    <link rel="stylesheet" href="/intimacy_static/style.css?v=4.8.0">
+</head>
+<body>
+
+<!-- SVG Icon Sprite -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+  <symbol id="icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+  <symbol id="icon-bar-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></symbol>
+  <symbol id="icon-heart-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></symbol>
+  <symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+  <symbol id="icon-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></symbol>
+  <symbol id="icon-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></symbol>
+  <symbol id="icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></symbol>
+  <symbol id="icon-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></symbol>
+  <symbol id="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="icon-hand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></symbol>
+  <symbol id="icon-smile" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></symbol>
+  <symbol id="icon-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+  <symbol id="icon-meh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></symbol>
+  <symbol id="icon-minus-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></symbol>
+  <symbol id="icon-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+  <symbol id="icon-map-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></symbol>
+  <symbol id="icon-droplet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></symbol>
+  <symbol id="icon-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.5 5L19 9.5 13.5 11 12 16l-1.5-5L5 9.5 10.5 8z"/><path d="M5 20v-3"/><path d="M3.5 18.5h3"/><path d="M19 14v-3"/><path d="M17.5 12.5h3"/></symbol>
+  <symbol id="icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="icon-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="icon-timer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15" y2="11"/><circle cx="12" cy="14" r="8"/></symbol>
+  <symbol id="icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+  <symbol id="icon-bed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v4"/><circle cx="8" cy="6" r="2"/></symbol>
+  <symbol id="icon-sofa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v-2a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2"/><path d="M5 11h14a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2z"/><path d="M6 18v2"/><path d="M18 18v2"/><path d="M3 14H1v-3a2 2 0 0 1 2-2"/><path d="M21 14h2v-3a2 2 0 0 0-2-2"/></symbol>
+  <symbol id="icon-shower" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 16"/><path d="M9 9a3 3 0 0 1 3-3"/><circle cx="12" cy="12" r="0.5"/><circle cx="14" cy="14" r="0.5"/><circle cx="10" cy="14" r="0.5"/><circle cx="16" cy="16" r="0.5"/><circle cx="8" cy="16" r="0.5"/></symbol>
+  <symbol id="icon-utensils" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></symbol>
+  <symbol id="icon-sunrise" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/><line x1="23" y1="22" x2="1" y2="22"/><polyline points="8 6 12 2 16 6"/></symbol>
+  <symbol id="icon-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+  <symbol id="icon-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="9" y1="22" x2="9" y2="2"/><line x1="15" y1="22" x2="15" y2="2"/></symbol>
+  <symbol id="icon-home-alt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/><path d="M7 5l5 4 5-4"/></symbol>
+  <symbol id="icon-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9L18.4 8c-.2-.5-.8-1-1.4-1H7c-.6 0-1.2.5-1.4 1L3.5 11.1C2.7 11.3 2 12.1 2 13v3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></symbol>
+  <symbol id="icon-tree" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L8 8h2l-3 5h2l-3 5h12l-3-5h2l-3-5h2z"/><line x1="12" y1="18" x2="12" y2="22"/></symbol>
+  <symbol id="icon-tent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20l10-16 10 16"/><path d="M5 20l7-11 7 11"/><line x1="12" y1="4" x2="12" y2="20"/></symbol>
+  <symbol id="icon-waves" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></symbol>
+  <symbol id="icon-pool" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 14c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><line x1="6" y1="3" x2="6" y2="12"/><line x1="18" y1="3" x2="18" y2="12"/></symbol>
+  <symbol id="icon-arrow-up-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="5 12 12 5 19 12"/><polyline points="5 19 12 19 19 19"/></symbol>
+  <symbol id="icon-stairs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h5v-5h5v-5h5V6h3"/><path d="M3 21V3"/></symbol>
+  <symbol id="icon-film" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></symbol>
+  <symbol id="icon-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+  <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="icon-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></symbol>
+  <symbol id="icon-frown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></symbol>
+  <symbol id="icon-smile-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/><path d="M18 6l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/></symbol>
+  <symbol id="icon-star-eyes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M7 7l1 2 2-1-1 2 2 1-2 1 1 2-2-1-2 1 1-2-2-1 2-1z"/><path d="M15 7l1 2 2-1-1 2 2 1-2 1 1 2-2-1-2 1 1-2-2-1 2-1z"/></symbol>
+  <symbol id="icon-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+  <symbol id="icon-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></symbol>
+  <symbol id="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="icon-shield-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19.69 14a6.9 6.9 0 0 0 .31-2V5l-8-3-3.16 1.18"/><path d="M4.73 4.73L4 5v7c0 6 8 10 8 10a20.29 20.29 0 0 0 2.76-1.3"/><line x1="1" y1="1" x2="23" y2="23"/></symbol>
+  <symbol id="icon-pill" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 20.5L3.5 13.5a5 5 0 0 1 7-7l7 7a5 5 0 0 1-7 7z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></symbol>
+  <symbol id="icon-circle-filled" viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="12" r="10"/></symbol>
+  <symbol id="icon-calendar-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></symbol>
+  <symbol id="icon-clock-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/><line x1="12" y1="2" x2="12" y2="4"/></symbol>
+  <symbol id="icon-message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="icon-command" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></symbol>
+  <symbol id="icon-hand-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2"/></symbol>
+  <symbol id="icon-dice" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="0.5" fill="currentColor"/><circle cx="15.5" cy="8.5" r="0.5" fill="currentColor"/><circle cx="12" cy="12" r="0.5" fill="currentColor"/><circle cx="8.5" cy="15.5" r="0.5" fill="currentColor"/><circle cx="15.5" cy="15.5" r="0.5" fill="currentColor"/></symbol>
+  <symbol id="icon-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8"/><path d="M16.5 8a2.5 2.5 0 0 0 0-5C13 3 12 8 12 8"/></symbol>
+  <symbol id="icon-egg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 2 6 8 6 14a6 6 0 0 0 12 0c0-6-2-12-6-12z"/></symbol>
+  <symbol id="icon-vibrate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="4" width="8" height="16" rx="1"/><line x1="3" y1="10" x2="3" y2="14"/><line x1="21" y1="10" x2="21" y2="14"/><line x1="5" y1="8" x2="5" y2="16"/><line x1="19" y1="8" x2="19" y2="16"/></symbol>
+  <symbol id="icon-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8z"/></symbol>
+  <symbol id="icon-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="icon-plane" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></symbol>
+  <symbol id="icon-wand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2"/><path d="M15 16v-2"/><path d="M8 9h2"/><path d="M20 9h2"/><path d="M17.8 11.8L19 13"/><path d="M15 9h0"/><path d="M17.8 6.2L19 5"/><path d="M3 21l9-9"/><path d="M12.2 6.2L11 5"/></symbol>
+  <symbol id="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></symbol>
+  <symbol id="icon-feather" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></symbol>
+  <symbol id="icon-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="icon-clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></symbol>
+  <symbol id="icon-hourglass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12"/><path d="M6 22h12"/><path d="M6 2v4a6 6 0 0 0 6 6 6 6 0 0 0 6-6V2"/><path d="M6 22v-4a6 6 0 0 0 6-6 6 6 0 0 0 6 6v4"/></symbol>
+  <symbol id="icon-shirt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></symbol>
+  <symbol id="icon-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6L4 20a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1l-6-11V3"/><line x1="7" y1="14" x2="17" y2="14"/></symbol>
+  <symbol id="icon-snowflake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></symbol>
+  <symbol id="icon-candle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-1 2 1 3 0 5-1-2-2-3 0-5z"/><rect x="9" y="7" width="6" height="13" rx="1"/><line x1="9" y1="20" x2="15" y2="20"/></symbol>
+  <symbol id="icon-smartphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></symbol>
+  <symbol id="icon-package" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></symbol>
+  <symbol id="icon-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+  <symbol id="icon-thought" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="9" cy="10" r="0.5" fill="currentColor"/><circle cx="12" cy="10" r="0.5" fill="currentColor"/><circle cx="15" cy="10" r="0.5" fill="currentColor"/></symbol>
+  <symbol id="icon-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3 3 3 0 0 0-3 3 3 3 0 0 0 0 6 3 3 0 0 0 3 3 3 3 0 0 0 6 0 3 3 0 0 0 3-3 3 3 0 0 0 0-6 3 3 0 0 0-3-3 3 3 0 0 0-3-3z"/><path d="M12 2v20"/><path d="M9 8h0"/><path d="M15 8h0"/><path d="M9 16h0"/><path d="M15 16h0"/></symbol>
+  <symbol id="icon-help-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+  <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="icon-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></symbol>
+  <symbol id="icon-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol>
+  <symbol id="icon-drama" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10a8 8 0 0 1 16 0"/><path d="M2 10v4a8 8 0 0 0 16 0v-4"/><path d="M18 10a6 6 0 0 1 4 6c0 3-2 4-4 4"/><circle cx="8" cy="11" r="0.5" fill="currentColor"/><circle cx="12" cy="11" r="0.5" fill="currentColor"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="6" y1="2" x2="6" y2="4"/></symbol>
+  <symbol id="icon-palette" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="1.5" fill="currentColor"/><circle cx="17.5" cy="10.5" r="1.5" fill="currentColor"/><circle cx="8.5" cy="7.5" r="1.5" fill="currentColor"/><circle cx="6.5" cy="12.5" r="1.5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></symbol>
+  <symbol id="icon-stock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H4v4"/><path d="M2 8h20v4H2z"/><path d="M4 12v8h16v-8"/><path d="M8 12v4"/><path d="M16 12v4"/><path d="M12 12v4"/></symbol>
+  <symbol id="icon-arrows-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="14" x2="12" y2="4"/><polyline points="5 11 12 4 19 11"/><line x1="7" y1="21" x2="17" y2="21"/><line x1="7" y1="17" x2="17" y2="17"/></symbol>
+  <symbol id="icon-chevrons-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></symbol>
+  <symbol id="icon-armchair" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3"/><path d="M3 11v5a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H7v-2a2 2 0 0 0-4 0z"/><path d="M5 18v2"/><path d="M19 18v2"/></symbol>
+  <symbol id="icon-refresh-cw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+  <symbol id="icon-more-horizontal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></symbol>
+  <symbol id="icon-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <!-- Duration / Foreplay -->
+  <symbol id="icon-stopwatch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="14" r="8"/><line x1="12" y1="10" x2="12" y2="14"/><line x1="12" y1="14" x2="15" y2="16"/><line x1="10" y1="2" x2="14" y2="2"/></symbol>
+  <symbol id="icon-timer-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="2" x2="14" y2="2"/><circle cx="12" cy="14" r="8"/><line x1="12" y1="10" x2="12" y2="14"/><line x1="4" y1="4" x2="20" y2="20"/></symbol>
+  <!-- Mood -->
+  <symbol id="icon-mood-happy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></symbol>
+  <symbol id="icon-mood-romantic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/><circle cx="12" cy="11" r="1.5" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="icon-mood-excited" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M7 8l2 1"/><path d="M15 8l-2 1"/><line x1="18" y1="4" x2="20" y2="2"/><line x1="16" y1="2" x2="18" y2="4"/><line x1="6" y1="4" x2="4" y2="2"/><line x1="8" y1="2" x2="6" y2="4"/></symbol>
+  <symbol id="icon-mood-calm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 15c1.5 1 5.5 1 7 0"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></symbol>
+  <symbol id="icon-mood-satisfied" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01"/><path d="M15 9h.01"/><path d="M12 3l1 2"/><path d="M12 3l-1 2"/></symbol>
+  <symbol id="icon-mood-sad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></symbol>
+  <symbol id="icon-mood-anxious" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 16c1-1 2.5-1 4 0s3-1 4 0"/><path d="M9 9h.01"/><path d="M15 9h.01"/><path d="M8 4l-1 2"/><path d="M16 4l1 2"/></symbol>
+  <symbol id="icon-mood-tired" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 16s1.5-2 4-2 4 2 4 2"/><path d="M9 9l-1-1"/><path d="M15 9l1-1"/><path d="M15 4l2-2"/><path d="M17 4l-2-2"/></symbol>
+  <!-- Cooperation -->
+  <symbol id="icon-hand-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/><line x1="2" y1="2" x2="8" y2="8" stroke-width="2"/></symbol>
+  <symbol id="icon-hand-shake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17l-2-2"/><path d="M7 11l4 4"/><path d="M17 7l-6 6"/><path d="M7 17h10"/><path d="M3 11l4 4"/></symbol>
+  <symbol id="icon-thumbs-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></symbol>
+  <symbol id="icon-heart-hand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/><path d="M12 11v4"/><path d="M10 13h4"/></symbol>
+  <!-- Libido -->
+  <symbol id="icon-thermometer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></symbol>
+  <symbol id="icon-gauge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="icon-equals" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/></symbol>
+  <symbol id="icon-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></symbol>
+  <symbol id="icon-fire" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <!-- Method -->
+  <symbol id="icon-hand-point" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></symbol>
+  <symbol id="icon-lips" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c0 4 4 7 10 7s10-3 10-7c0 0-4 3-10 3S2 12 2 12z"/><path d="M2 12c0-4 4-7 10-7s10 3 10 7"/></symbol>
+  <symbol id="icon-breast" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4c-3 0-6 3-6 6s3 6 6 6 6-3 6-6-3-6-6-6z"/><circle cx="12" cy="10" r="2"/></symbol>
+  <symbol id="icon-legs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2c0 4-2 8-2 12s1 6 3 6"/><path d="M16 2c0 4 2 8 2 12s-1 6-3 6"/></symbol>
+  <symbol id="icon-foot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18c0 2 1 4 3 4s4-2 4-4V8c0-2 1-4 3-4s3 2 3 4v6c0 2 1 3 1 5"/><path d="M10 14H6c-2 0-4-1-4-4V6c0-2 2-4 4-4h4c2 0 4 2 4 4v4"/></symbol>
+  <symbol id="icon-buttocks" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 16c-2 0-4-2-4-4a4 4 0 0 1 8 0"/><path d="M16 16c2 0 4-2 4-4a4 4 0 0 0-8 0"/><line x1="12" y1="8" x2="12" y2="20"/></symbol>
+  <symbol id="icon-stomach" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6c-2 2-3 5-3 7s1 5 3 6c1 1 3 1 4 0 1 1 3 1 4 0 2-1 3-4 3-6s-1-5-3-7c-1-1-3-1-4 0-1-1-3-1-4 0z"/><line x1="12" y1="10" x2="12" y2="16"/></symbol>
+  <symbol id="icon-hair" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 2 4 6 4 12c0 2 1 4 2 5"/><path d="M12 2c4 0 8 4 8 10 0 2-1 4-2 5"/><path d="M4 12c0 4 3 8 8 8"/><path d="M20 12c0 4-3 8-8 8"/></symbol>
+  <symbol id="icon-neck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4v16"/><path d="M14 4v16"/><path d="M8 6c2-1 6-1 8 0"/><path d="M8 18c2 1 6 1 8 0"/></symbol>
+  <symbol id="icon-armpit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6"/><path d="M8 8c0 2 2 4 4 4s4-2 4-4"/><path d="M6 14c-1 0-2 1-2 2s1 2 2 2"/><path d="M18 14c1 0 2 1 2 2s-1 2-2 2"/><path d="M10 14v8"/><path d="M14 14v8"/></symbol>
+  <symbol id="icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+  <symbol id="icon-move" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/></symbol>
+  <symbol id="icon-pie-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></symbol>
+<symbol id="icon-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.5 5L19 9.5 13.5 11 12 16l-1.5-5L5 9.5 10.5 8z"/></symbol>
+<symbol id="icon-wine" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-1 9a5 5 0 0 1-3 4 5 5 0 0 1-3-4L8 2z"/><path d="M7 21h10"/><path d="M12 15v6"/></symbol>
+<symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+<symbol id="icon-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+<symbol id="icon-database" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></symbol>
+</svg>
+
+<div id="app">
+
+    <!-- 顶部 -->
+    <header class="app-header">
+        <div class="header-left">
+            <h1><svg class="icon icon-lg"><use href="#icon-heart"/></svg> 亲密空间</h1>
+        </div>
+        <div class="header-right">
+            <button class="btn-safe-badge" id="btnSafeBadge" title="当前安全期状态">
+                <span id="safeStatusIcon"><svg class="icon"><use href="#icon-circle"/></svg></span>
+                <span id="safeStatusText">计算中</span>
+            </button>
+            <button class="btn-add-main" id="btnAddMain" title="添加记录">+</button>
+        </div>
+    </header>
+
+    <!-- 计时器 -->
+    <section class="timer-section" id="timerSection">
+        <div class="timer-card" id="timerCard">
+            <div class="timer-display" id="timerDisplay">
+                <span class="timer-num" id="timerMin">00</span><span class="timer-colon">:</span><span class="timer-num" id="timerSec">00</span>
+            </div>
+            <div class="timer-label" id="timerLabel">准备就绪</div>
+            <div class="timer-actions">
+                <button class="timer-btn timer-start" id="timerStart"><svg class="icon"><use href="#icon-play"/></svg> 开始计时</button>
+                <button class="timer-btn timer-stop" id="timerStop" style="display:none;"><svg class="icon"><use href="#icon-square"/></svg> 结束并记录</button>
+                <button class="timer-btn timer-cancel" id="timerCancel" style="display:none;"><svg class="icon"><use href="#icon-x"/></svg> 取消</button>
+            </div>
+            <div class="timer-ring" id="timerRing"></div>
+        </div>
+    </section>
+
+    <!-- 快捷统计 -->
+    <section class="quick-stats" id="quickStats">
+        <div class="quick-stat">
+            <span class="qs-value" id="qsTotal">0</span>
+            <span class="qs-label">总次数</span>
+        </div>
+        <div class="quick-stat">
+            <span class="qs-value" id="qsMonth">0</span>
+            <span class="qs-label">本月</span>
+        </div>
+        <div class="quick-stat">
+            <span class="qs-value" id="qsYear">0</span>
+            <span class="qs-label">今年</span>
+        </div>
+        <div class="quick-stat">
+            <span class="qs-value" id="qsAvg">0</span>
+            <span class="qs-label">均愉悦</span>
+        </div>
+    </section>
+
+    <!-- 标签栏 -->
+    <nav class="tab-bar">
+        <button class="tab-btn active" data-tab="calendar"><svg class="icon"><use href="#icon-calendar"/></svg> 日历</button>
+        <button class="tab-btn" data-tab="records"><svg class="icon"><use href="#icon-edit"/></svg> 记录</button>
+        <button class="tab-btn" data-tab="stats"><svg class="icon"><use href="#icon-bar-chart"/></svg> 统计</button>
+        <button class="tab-btn" data-tab="periods"><svg class="icon"><use href="#icon-heart-pulse"/></svg> 周期</button>
+        <button class="tab-btn" data-tab="settings"><svg class="icon"><use href="#icon-settings"/></svg></button>
+    </nav>
+
+    <main class="content">
+
+        <!-- 日历视图 -->
+        <div class="tab-content active" id="tab-calendar">
+            <div class="calendar-controls">
+                <button class="btn-nav" id="prevMonth">‹</button>
+                <h2 id="calendarTitle" class="calendar-title-clickable">2024年1月</h2>
+                <button class="btn-nav" id="nextMonth">›</button>
+                <!-- 年月快速选择弹窗 -->
+                <div class="calendar-picker" id="calendarPicker">
+                    <div class="picker-header">
+                        <button class="picker-year-btn" id="pickerPrevYear">‹</button>
+                        <span class="picker-year" id="pickerYear">2026</span>
+                        <button class="picker-year-btn" id="pickerNextYear">›</button>
+                    </div>
+                    <div class="picker-months" id="pickerMonths"></div>
+                </div>
+            </div>
+            <div class="calendar-weekdays">
+                <span>一</span><span>二</span><span>三</span><span>四</span>
+                <span>五</span><span>六</span><span>日</span>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+            <div class="calendar-legend">
+                <span class="legend-item"><span class="cal-dot dot-sex"></span>做爱</span>
+                <span class="legend-item"><span class="cal-dot dot-mast"></span>自慰</span>
+                <span class="legend-item"><span class="cal-dot dot-dream"></span>春梦</span>
+                <span class="legend-item"><span class="legend-swatch sw-period"></span>经期</span>
+                <span class="legend-item"><span class="legend-swatch sw-fertile"></span>易孕期</span>
+                <span class="legend-item"><span class="legend-swatch sw-safe"></span>安全期</span>
+            </div>
+            <div class="calendar-tooltip" id="calendarTooltip"></div>
+        </div>
+
+        <!-- 记录列表 -->
+        <div class="tab-content" id="tab-records" style="position:relative;">
+            <div class="filter-bar-grid" id="filterBarGrid">
+                <div class="filter-item">
+                    <select id="filterMonth" class="filter-select-mini"><option value="">全部</option></select>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="category" title="类别"><svg class="icon"><use href="#icon-heart"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="location" title="地点"><svg class="icon"><use href="#icon-map-pin"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="mood" title="心情"><svg class="icon"><use href="#icon-smile"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="initiator" title="谁主动"><svg class="icon"><use href="#icon-users"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="contraception" title="避孕"><svg class="icon"><use href="#icon-shield"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="position" title="体位"><svg class="icon"><use href="#icon-hand"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="method" title="方式"><svg class="icon"><use href="#icon-activity"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="toy_detail" title="玩具"><svg class="icon"><use href="#icon-gift"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="ejaculation" title="射精"><svg class="icon"><use href="#icon-droplet"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="alcohol" title="酒精"><svg class="icon"><use href="#icon-flask"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="sleep_quality" title="睡眠"><svg class="icon"><use href="#icon-moon"/></svg></button>
+                </div>
+                <div class="filter-item" style="margin-left:auto;">
+                    <button class="filter-icon-btn" id="btnClearFilters" title="清除筛选" style="color:#e53e3e;"><svg class="icon"><use href="#icon-x"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="btn-secondary" id="btnToggleAllRecords">全部展开 ▾</button>
+                </div>
+            </div>
+            <!-- 筛选选项面板 -->
+            <div class="filter-options-panel" id="filterOptionsPanel" style="display:none;">
+                <div class="filter-options-header">
+                    <span id="filterOptionsTitle"></span>
+                    <button class="filter-options-close" id="filterOptionsClose">×</button>
+                </div>
+                <div class="filter-options-body" id="filterOptionsBody"></div>
+            </div>
+            <div class="record-list" id="recordList">
+                <p class="empty-hint">暂无记录，点击顶部 + 添加</p>
+            </div>
+        </div>
+
+        <!-- 统计视图 -->
+        <div class="tab-content" id="tab-stats">
+            <div class="stats-filter-bar">
+                <button class="stats-filter-btn active" data-range="all">全部</button>
+                <button class="stats-filter-btn" data-range="month">本月</button>
+                <button class="stats-filter-btn" data-range="year">今年</button>
+                <button class="stats-filter-btn" data-range="prev">往年</button>
+                <select id="statsYearSelect" class="stats-year-select" style="display:none">
+                    <option value="">选择年份</option>
+                </select>
+            </div>
+            <div class="stats-section">
+                <h3 class="stats-title"><svg class="icon"><use href="#icon-calendar"/></svg> 年度热力图</h3>
+                <div class="heatmap-year" id="heatmapYear"></div>
+                <div class="heatmap-months-label" id="heatmapMonthsLabel"></div>
+                <div class="calendar-legend heatmap-legend">
+                    <span class="legend-item"><span class="legend-swatch hm-0"></span>无记录</span>
+                    <span class="legend-item"><span class="legend-swatch hm-1"></span>少量</span>
+                    <span class="legend-item"><span class="legend-swatch hm-2"></span>适中</span>
+                    <span class="legend-item"><span class="legend-swatch hm-3"></span>频繁</span>
+                    <span class="legend-item"><span class="legend-swatch hm-sex"></span>做爱</span>
+                    <span class="legend-item"><span class="legend-swatch hm-mast"></span>自慰</span>
+                    <span class="legend-item"><span class="legend-swatch hm-dream"></span>春梦</span>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="stTotal">0</div>
+                    <div class="stat-label">总次数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stYear">0</div>
+                    <div class="stat-label">今年</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stMonth">0</div>
+                    <div class="stat-label">本月</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stWeek">0</div>
+                    <div class="stat-label">本周</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stAvgP">0</div>
+                    <div class="stat-label">均愉悦</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stAvgD">0<span class="unit">分</span></div>
+                    <div class="stat-label">均时长</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stSex">0</div>
+                    <div class="stat-label">做爱</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stMast">0</div>
+                    <div class="stat-label">自慰</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stDream">0</div>
+                    <div class="stat-label">春梦</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stMaxDur">0<span class="unit">分</span></div>
+                    <div class="stat-label">最长</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stMaxOrgasm">0</div>
+                    <div class="stat-label">最多高潮</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stStreak">0<span class="unit">天</span></div>
+                    <div class="stat-label">最长连续</div>
+                </div>
+            </div>
+
+            <!-- 趋势分析 -->
+            <div class="stats-section">
+                <h3 class="stats-title"><svg class="icon"><use href="#icon-bar-chart"/></svg> 月度趋势</h3>
+                <div class="trend-chart" id="trendChart"></div>
+            </div>
+
+            <!-- 最爱统计 -->
+            <div class="stats-section">
+                <h3 class="stats-title"><svg class="icon"><use href="#icon-heart"/></svg> 最爱</h3>
+                <div class="fav-grid" id="favGrid"></div>
+            </div>
+
+            <!-- 分布统计 -->
+            <div class="stats-section">
+                <h3 class="stats-title"><svg class="icon"><use href="#icon-bar-chart"/></svg> 分布</h3>
+                <div class="dist-grid" id="distGrid"></div>
+            </div>
+
+            <!-- 全项目分析饼图 -->
+            <div class="stats-section">
+                <h3 class="stats-title"><svg class="icon"><use href="#icon-pie-chart"/></svg> 分析</h3>
+                <div class="pie-grid" id="pieGrid"></div>
+            </div>
+
+            <!-- 最佳奖章 -->
+            <div class="stats-section">
+                <h3 class="stats-title"><svg class="icon"><use href="#icon-trophy"/></svg> 最佳奖章</h3>
+                <div class="award-grid" id="awardGrid"></div>
+            </div>
+        </div>
+
+        <!-- 周期管理 -->
+        <div class="tab-content" id="tab-periods">
+            <button class="btn-add-period" id="btnAddPeriod">
+                <span><svg class="icon"><use href="#icon-plus"/></svg> 添加经期记录</span>
+            </button>
+            <div class="period-prediction" id="periodPrediction">
+                <div class="pred-card">
+                    <span class="pred-label">下次经期预测</span>
+                    <span class="pred-value" id="predNextPeriod">—</span>
+                </div>
+                <div class="pred-card">
+                    <span class="pred-label">安全期状态</span>
+                    <span class="pred-value" id="predSafeStatus">—</span>
+                </div>
+            </div>
+            <div class="section-title"><svg class="icon"><use href="#icon-clipboard"/></svg> 经期记录</div>
+            <div class="period-list" id="periodList">
+                <p class="empty-hint">暂无经期记录</p>
+            </div>
+        </div>
+
+        <!-- 设置 -->
+        <div class="tab-content" id="tab-settings">
+            <div class="settings-form">
+                <div class="form-group">
+                    <label>周期长度（天）</label>
+                    <input type="number" id="cycleLength" min="20" max="45" value="28">
+                </div>
+                <div class="form-group">
+                    <label>经期长度（天）</label>
+                    <input type="number" id="periodLength" min="2" max="10" value="5">
+                </div>
+                <div class="form-group">
+                    <label>安全期天数</label>
+                    <input type="number" id="safePeriodDays" min="3" max="14" value="7">
+                </div>
+                <div class="form-group">
+                    <label>易孕期缓冲（天）</label>
+                    <input type="number" id="ovulationBuffer" min="2" max="10" value="5">
+                </div>
+
+                <div class="form-group">
+                    <label><svg class="icon"><use href="#icon-palette"/></svg> 外观主题</label>
+                    <div class="theme-options" id="themeOptions">
+                        <button type="button" class="theme-btn" data-theme="dark"><svg class="icon"><use href="#icon-moon"/></svg> 暗黑</button>
+                        <button type="button" class="theme-btn" data-theme="light"><svg class="icon"><use href="#icon-sun"/></svg> 亮色</button>
+                        <button type="button" class="theme-btn" data-theme="glass"><svg class="icon"><use href="#icon-droplet"/></svg> 液态玻璃</button>
+                        <button type="button" class="theme-btn" data-theme="pink"><svg class="icon"><use href="#icon-sparkles"/></svg> 粉色</button>
+                    </div>
+                </div>
+
+                <button class="btn-save" id="btnSaveSettings">保存设置</button>
+
+                <div class="settings-section">
+                    <label><svg class="icon"><use href="#icon-database"/></svg> 数据管理</label>
+                    <div class="ie-btn-row">
+                        <button class="btn-secondary" id="btnExportData">
+                            <svg class="icon"><use href="#icon-upload"/></svg> 导出数据
+                        </button>
+                        <button class="btn-secondary" id="btnImportData">
+                            <svg class="icon"><use href="#icon-download"/></svg> 导入数据
+                        </button>
+                    </div>
+                    <input type="file" id="fileImport" accept=".json" style="display:none">
+                    <button class="btn-danger" id="btnClearAllData" style="margin-top:12px;">
+                        <svg class="icon"><use href="#icon-trash-2"/></svg> 清除所有数据
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- 添加记录弹窗 -->
+<div class="modal" id="modalAddRecord">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalRecordTitle">添加记录</h3>
+            <button class="modal-close" id="modalClose">×</button>
+        </div>
+        <div class="modal-body">
+            <!-- 1. 时间 -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label><svg class="icon"><use href="#icon-calendar"/></svg> 日期</label>
+                    <div class="datetime-wrap" data-picker="date">
+                        <button type="button" class="btn-datetime" id="recDateBtn">
+                            <svg class="icon"><use href="#icon-calendar"/></svg>
+                            <span id="recDateText"></span>
+                            <svg class="icon icon-chevron"><use href="#icon-chevron-right"/></svg>
+                        </button>
+                        <input type="hidden" id="recDate" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><svg class="icon"><use href="#icon-clock"/></svg> 时间</label>
+                    <div class="datetime-wrap" data-picker="time">
+                        <button type="button" class="btn-datetime" id="recTimeBtn">
+                            <svg class="icon"><use href="#icon-clock"/></svg>
+                            <span id="recTimeText">22:00</span>
+                            <svg class="icon icon-chevron"><use href="#icon-chevron-right"/></svg>
+                        </button>
+                        <input type="hidden" id="recTime" value="22:00">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. 类别 -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-folder"/></svg> 类别</label>
+                <div class="mood-grid" id="recCategory">
+                    <button type="button" class="mood-btn active" data-val="sex"><svg class="icon icon-mood-romantic"><use href="#icon-users"/></svg> 做爱</button>
+                    <button type="button" class="mood-btn" data-val="masturbation"><svg class="icon icon-mood-sober"><use href="#icon-hand"/></svg> 自慰</button>
+                    <button type="button" class="mood-btn" data-val="dream"><svg class="icon icon-blue"><use href="#icon-moon"/></svg> 春梦</button>
+                </div>
+                <input type="hidden" id="recCategoryVal" value="sex">
+            </div>
+
+            <!-- 3. 持续时间 -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-timer"/></svg> 持续时长</label>
+                <div class="mood-grid" id="durationGrid">
+                    <button type="button" class="mood-btn" data-val="5"><svg class="icon icon-mood-sober"><use href="#icon-stopwatch"/></svg> 5分钟</button>
+                    <button type="button" class="mood-btn" data-val="10"><svg class="icon icon-mood-calm"><use href="#icon-stopwatch"/></svg> 10分钟</button>
+                    <button type="button" class="mood-btn" data-val="15"><svg class="icon icon-teal"><use href="#icon-stopwatch"/></svg> 15分钟</button>
+                    <button type="button" class="mood-btn active" data-val="20"><svg class="icon icon-mood-expect"><use href="#icon-stopwatch"/></svg> 20分钟</button>
+                    <button type="button" class="mood-btn" data-val="25"><svg class="icon icon-mood-expect"><use href="#icon-stopwatch"/></svg> 25分钟</button>
+                    <button type="button" class="mood-btn" data-val="30"><svg class="icon icon-amber"><use href="#icon-stopwatch"/></svg> 30分钟</button>
+                    <button type="button" class="mood-btn" data-val="40"><svg class="icon icon-warning"><use href="#icon-stopwatch"/></svg> 40分钟</button>
+                    <button type="button" class="mood-btn" data-val="45"><svg class="icon icon-warning"><use href="#icon-stopwatch"/></svg> 45分钟</button>
+                    <button type="button" class="mood-btn" data-val="60"><svg class="icon icon-mood-satisfied"><use href="#icon-clock"/></svg> 1小时+</button>
+                </div>
+                <input type="hidden" id="recDuration" value="20">
+            </div>
+
+            <!-- 4. 地点 -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-map-pin"/></svg> 地点</label>
+                <div class="mood-grid" id="locationGrid">
+                    <button type="button" class="mood-btn" data-val="家"><svg class="icon icon-mood-calm"><use href="#icon-home"/></svg> 家</button>
+                    <button type="button" class="mood-btn active" data-val="卧室"><svg class="icon icon-mood-romantic"><use href="#icon-bed"/></svg> 卧室</button>
+                    <button type="button" class="mood-btn" data-val="客厅"><svg class="icon icon-mood-calm"><use href="#icon-sofa"/></svg> 客厅</button>
+                    <button type="button" class="mood-btn" data-val="浴室"><svg class="icon icon-blue"><use href="#icon-shower"/></svg> 浴室</button>
+                    <button type="button" class="mood-btn" data-val="厨房"><svg class="icon icon-warning"><use href="#icon-utensils"/></svg> 厨房</button>
+                    <button type="button" class="mood-btn" data-val="阳台"><svg class="icon icon-mood-expect"><use href="#icon-sunrise"/></svg> 阳台</button>
+                    <button type="button" class="mood-btn" data-val="书房"><svg class="icon icon-mood-sober"><use href="#icon-book"/></svg> 书房</button>
+                    <button type="button" class="mood-btn" data-val="酒店"><svg class="icon icon-mood-satisfied"><use href="#icon-building"/></svg> 酒店</button>
+                    <button type="button" class="mood-btn" data-val="民宿"><svg class="icon icon-teal"><use href="#icon-home-alt"/></svg> 民宿</button>
+                    <button type="button" class="mood-btn" data-val="车里"><svg class="icon icon-mood-sober"><use href="#icon-car"/></svg> 车/车内</button>
+                    <button type="button" class="mood-btn" data-val="野外"><svg class="icon icon-mood-expect"><use href="#icon-tree"/></svg> 野外</button>
+                    <button type="button" class="mood-btn" data-val="露营"><svg class="icon icon-teal"><use href="#icon-tent"/></svg> 露营</button>
+                    <button type="button" class="mood-btn" data-val="海边"><svg class="icon icon-blue"><use href="#icon-waves"/></svg> 海边</button>
+                    <button type="button" class="mood-btn" data-val="沙发"><svg class="icon icon-mood-calm"><use href="#icon-sofa"/></svg> 沙发</button>
+                    <button type="button" class="mood-btn" data-val="楼梯间"><svg class="icon icon-mood-tired"><use href="#icon-stairs"/></svg> 楼梯间</button>
+                    <button type="button" class="mood-btn" data-val="办公室"><svg class="icon icon-mood-sober"><use href="#icon-briefcase"/></svg> 办公室</button>
+                    <button type="button" class="mood-btn" data-val="其他"><svg class="icon icon-mood-tired"><use href="#icon-map-pin"/></svg> 其他</button>
+                </div>
+                <input type="hidden" id="recLocation" value="卧室">
+            </div>
+
+            <!-- 4b. 饮酒状态 -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-wine"/></svg> 饮酒状态</label>
+                <div class="mood-grid" id="recAlcohol">
+                    <button type="button" class="mood-btn" data-val="none"><svg class="icon icon-teal"><use href="#icon-x"/></svg> 无</button>
+                    <button type="button" class="mood-btn" data-val="light"><svg class="icon icon-blue"><use href="#icon-wine"/></svg> 少量</button>
+                    <button type="button" class="mood-btn" data-val="medium"><svg class="icon icon-orange"><use href="#icon-wine"/></svg> 中量</button>
+                    <button type="button" class="mood-btn" data-val="drunk"><svg class="icon icon-red"><use href="#icon-wine"/></svg> 醉酒</button>
+                </div>
+                <input type="hidden" id="recAlcoholVal" value="none">
+            </div>
+
+            <!-- 5. 谁主动 -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-users"/></svg> 谁主动</label>
+                <div class="mood-grid" id="initiatorGrid">
+                    <button type="button" class="mood-btn" data-val="男方主动"><svg class="icon icon-blue"><use href="#icon-user"/></svg> 男方主动</button>
+                    <button type="button" class="mood-btn" data-val="女方主动"><svg class="icon icon-rose"><use href="#icon-user"/></svg> 女方主动</button>
+                    <button type="button" class="mood-btn active" data-val="双方主动"><svg class="icon icon-mood-satisfied"><use href="#icon-users"/></svg> 双方主动</button>
+                    <button type="button" class="mood-btn" data-val="自然发生"><svg class="icon icon-mood-expect"><use href="#icon-leaf"/></svg> 自然发生</button>
+                </div>
+                <input type="hidden" id="recInitiator" value="">
+            </div>
+
+            <!-- 6. 伴侣配合度 -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-users"/></svg> 伴侣配合度</label>
+                <div class="mood-grid" id="recCooperation">
+                    <button type="button" class="mood-btn" data-val="1"><svg class="icon icon-danger"><use href="#icon-hand-x"/></svg> 抗拒</button>
+                    <button type="button" class="mood-btn" data-val="2"><svg class="icon icon-warning"><use href="#icon-hand-shake"/></svg> 勉强</button>
+                    <button type="button" class="mood-btn active" data-val="3"><svg class="icon icon-mood-calm"><use href="#icon-thumbs-up"/></svg> 配合</button>
+                    <button type="button" class="mood-btn" data-val="4"><svg class="icon icon-mood-expect"><use href="#icon-heart-hand"/></svg> 积极</button>
+                    <button type="button" class="mood-btn" data-val="5"><svg class="icon icon-mood-romantic"><use href="#icon-heart"/></svg> 非常投入</button>
+                </div>
+                <input type="hidden" id="recCooperationVal" value="3">
+            </div>
+
+            <!-- 7. 性欲强度 -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-flame"/></svg> 性欲强度</label>
+                <div class="mood-grid" id="recLibido">
+                    <button type="button" class="mood-btn" data-val="1"><svg class="icon icon-blue"><use href="#icon-thermometer"/></svg> 很低</button>
+                    <button type="button" class="mood-btn" data-val="2"><svg class="icon icon-mood-tired"><use href="#icon-gauge"/></svg> 一般</button>
+                    <button type="button" class="mood-btn active" data-val="3"><svg class="icon icon-mood-calm"><use href="#icon-equals"/></svg> 正常</button>
+                    <button type="button" class="mood-btn" data-val="4"><svg class="icon icon-warning"><use href="#icon-arrow-up"/></svg> 强烈</button>
+                    <button type="button" class="mood-btn" data-val="5"><svg class="icon icon-mood-fire"><use href="#icon-fire"/></svg> 爆炸</button>
+                </div>
+                <input type="hidden" id="recLibidoVal" value="3">
+            </div>
+
+            <!-- 8. 前戏时长 -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-hand-heart"/></svg> 前戏时长</label>
+                <div class="mood-grid" id="foreplayGrid">
+                    <button type="button" class="mood-btn" data-val="0"><svg class="icon icon-mood-tired"><use href="#icon-timer-off"/></svg> 无/直接</button>
+                    <button type="button" class="mood-btn" data-val="5"><svg class="icon icon-mood-sober"><use href="#icon-stopwatch"/></svg> 5分钟内</button>
+                    <button type="button" class="mood-btn active" data-val="10"><svg class="icon icon-mood-calm"><use href="#icon-stopwatch"/></svg> 10分钟</button>
+                    <button type="button" class="mood-btn" data-val="15"><svg class="icon icon-teal"><use href="#icon-stopwatch"/></svg> 15分钟</button>
+                    <button type="button" class="mood-btn active" data-val="20"><svg class="icon icon-mood-expect"><use href="#icon-stopwatch"/></svg> 20分钟</button>
+                    <button type="button" class="mood-btn" data-val="30"><svg class="icon icon-amber"><use href="#icon-clock"/></svg> 30分钟</button>
+                    <button type="button" class="mood-btn" data-val="45"><svg class="icon icon-warning"><use href="#icon-clock"/></svg> 45分钟+</button>
+                    <button type="button" class="mood-btn" data-val="60"><svg class="icon icon-mood-fire"><use href="#icon-clock"/></svg> 1小时+</button>
+                </div>
+                <input type="hidden" id="recForeplay" value="10">
+            </div>
+
+            <!-- 9. 体位（可多选） -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-activity"/></svg> 体位（可多选）</label>
+                <div class="multi-tag-grid" id="positionGrid">
+                    <button type="button" class="tag-btn multi active" data-val="传教士"><svg class="icon icon-rose"><use href="#icon-arrows-up"/></svg> 传教士</button>
+                    <button type="button" class="tag-btn multi" data-val="女上"><svg class="icon icon-rose"><use href="#icon-chevrons-up"/></svg> 女上</button>
+                    <button type="button" class="tag-btn multi" data-val="后入"><svg class="icon icon-rose"><use href="#icon-arrow-left"/></svg> 后入</button>
+                    <button type="button" class="tag-btn multi" data-val="侧入"><svg class="icon icon-rose"><use href="#icon-arrow-right"/></svg> 侧入</button>
+                    <button type="button" class="tag-btn multi" data-val="站立"><svg class="icon icon-rose"><use href="#icon-user"/></svg> 站立</button>
+                    <button type="button" class="tag-btn multi" data-val="坐姿"><svg class="icon icon-rose"><use href="#icon-armchair"/></svg> 坐姿</button>
+                    <button type="button" class="tag-btn multi" data-val="跪姿"><svg class="icon icon-rose"><use href="#icon-circle"/></svg> 跪姿</button>
+                    <button type="button" class="tag-btn multi" data-val="趴姿"><svg class="icon icon-rose"><use href="#icon-bed"/></svg> 趴姿</button>
+                    <button type="button" class="tag-btn multi" data-val="抱姿"><svg class="icon icon-mood-romantic"><use href="#icon-heart"/></svg> 抱姿</button>
+                    <button type="button" class="tag-btn multi" data-val="站式后入"><svg class="icon icon-rose"><use href="#icon-user"/></svg> 站式后入</button>
+                    <button type="button" class="tag-btn multi" data-val="骑乘位"><svg class="icon icon-rose"><use href="#icon-chevrons-up"/></svg> 骑乘位</button>
+                    <button type="button" class="tag-btn multi" data-val="背骑式"><svg class="icon icon-rose"><use href="#icon-arrow-left"/></svg> 背骑式</button>
+                    <button type="button" class="tag-btn multi" data-val="69"><svg class="icon icon-mood-romantic"><use href="#icon-refresh-cw"/></svg> 69</button>
+                    <button type="button" class="tag-btn multi" data-val="摇椅式"><svg class="icon icon-rose"><use href="#icon-move"/></svg> 摇椅式</button>
+                    <button type="button" class="tag-btn multi" data-val="双腿夹紧"><svg class="icon icon-rose"><use href="#icon-minus"/></svg> 双腿夹紧</button>
+                    <button type="button" class="tag-btn multi" data-val="双腿分开"><svg class="icon icon-rose"><use href="#icon-plus"/></svg> 双腿分开</button>
+                    <button type="button" class="tag-btn multi" data-val="沙发姿势"><svg class="icon icon-rose"><use href="#icon-sofa"/></svg> 沙发姿势</button>
+                    <button type="button" class="tag-btn multi" data-val="淋浴姿势"><svg class="icon icon-blue"><use href="#icon-droplet"/></svg> 淋浴姿势</button>
+                    <button type="button" class="tag-btn multi" data-val="其他"><svg class="icon icon-mood-tired"><use href="#icon-more-horizontal"/></svg> 其他</button>
+                </div>
+                <input type="hidden" id="recPosition" value="">
+            </div>
+
+            <!-- 10. 避孕措施 -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-shield"/></svg> 避孕措施</label>
+                <div class="mood-grid" id="recContraception">
+                    <button type="button" class="mood-btn" data-val="condom"><svg class="icon icon-safe"><use href="#icon-shield"/></svg> 安全套</button>
+                    <button type="button" class="mood-btn" data-val="none"><svg class="icon icon-danger"><use href="#icon-shield-off"/></svg> 无保护</button>
+                    <button type="button" class="mood-btn" data-val="pill"><svg class="icon icon-teal"><use href="#icon-pill"/></svg> 短效避孕药</button>
+                    <button type="button" class="mood-btn" data-val="iud"><svg class="icon icon-blue"><use href="#icon-circle-filled"/></svg> 宫内节育器</button>
+                    <button type="button" class="mood-btn active" data-val="withdrawal"><svg class="icon icon-warning"><use href="#icon-droplet"/></svg> 体外射精</button>
+                    <button type="button" class="mood-btn" data-val="safe"><svg class="icon icon-mood-expect"><use href="#icon-calendar-check"/></svg> 安全期</button>
+                    <button type="button" class="mood-btn" data-val="planb"><svg class="icon icon-danger"><use href="#icon-clock-alert"/></svg> 紧急避孕药</button>
+                </div>
+                <input type="hidden" id="recContraceptionVal" value="withdrawal">
+            </div>
+
+            <!-- 11. 做爱方式（可多选） -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-heart"/></svg> 做爱方式（可多选）</label>
+                <div class="multi-tag-grid method-grid" id="methodGrid">
+                    <button type="button" class="tag-btn multi active" data-val="阴道性交"><svg class="icon icon-mood-romantic"><use href="#icon-heart"/></svg> 阴道性交</button>
+                    <button type="button" class="tag-btn multi" data-val="口交女→男"><svg class="icon icon-mood-romantic"><use href="#icon-lips"/></svg> 女给男口</button>
+                    <button type="button" class="tag-btn multi" data-val="口交男→女"><svg class="icon icon-mood-romantic"><use href="#icon-lips"/></svg> 男给女口</button>
+                    <button type="button" class="tag-btn multi" data-val="指交"><svg class="icon icon-body"><use href="#icon-hand-point"/></svg> 指交</button>
+                    <button type="button" class="tag-btn multi" data-val="手交"><svg class="icon icon-body"><use href="#icon-hand"/></svg> 手交</button>
+                    <button type="button" class="tag-btn multi" data-val="乳交"><svg class="icon icon-body"><use href="#icon-breast"/></svg> 乳交</button>
+                    <button type="button" class="tag-btn multi" data-val="足交"><svg class="icon icon-body"><use href="#icon-foot"/></svg> 足交</button>
+                    <button type="button" class="tag-btn multi" data-val="腿交"><svg class="icon icon-body"><use href="#icon-legs"/></svg> 腿交</button>
+                    <button type="button" class="tag-btn multi" data-val="肛交"><svg class="icon icon-purple"><use href="#icon-target"/></svg> 肛交</button>
+                    <button type="button" class="tag-btn multi" data-val="深喉"><svg class="icon icon-mood-romantic"><use href="#icon-lips"/></svg> 深喉</button>
+                    <button type="button" class="tag-btn multi" data-val="前列腺按摩"><svg class="icon icon-purple"><use href="#icon-target"/></svg> 前列腺按摩</button>
+                    <button type="button" class="tag-btn multi" data-val="G点刺激"><svg class="icon icon-mood-fire"><use href="#icon-zap"/></svg> G点刺激</button>
+                    <button type="button" class="tag-btn multi" data-val="体外爱抚"><svg class="icon icon-body"><use href="#icon-hand-heart"/></svg> 体外爱抚</button>
+                    <button type="button" class="tag-btn multi" data-val="情趣视频"><svg class="icon icon-blue"><use href="#icon-film"/></svg> 情趣视频</button>
+                    <button type="button" class="tag-btn multi" data-val="角色扮演"><svg class="icon icon-purple"><use href="#icon-drama"/></svg> 角色扮演</button>
+                    <button type="button" class="tag-btn multi" data-val="控制与服从"><svg class="icon icon-kink"><use href="#icon-command"/></svg> 控制与服从</button>
+                    <button type="button" class="tag-btn multi" data-val="言语挑逗"><svg class="icon icon-mood-fire"><use href="#icon-flame"/></svg> 言语挑逗</button>
+                    <button type="button" class="tag-btn multi" data-val="情趣按摩"><svg class="icon icon-toy"><use href="#icon-hand-heart"/></svg> 情趣按摩</button>
+                    <button type="button" class="tag-btn multi" data-val="情趣游戏"><svg class="icon icon-toy"><use href="#icon-dice"/></svg> 情趣游戏</button>
+                    <button type="button" class="tag-btn multi" data-val="其他"><svg class="icon icon-mood-tired"><use href="#icon-more-horizontal"/></svg> 其他</button>
+                </div>
+                <input type="hidden" id="recMethod" value="">
+            </div>
+
+            <!-- 12. 情趣用品（可多选） -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-gift"/></svg> 情趣用品（可多选）</label>
+                <div class="multi-tag-grid toy-grid" id="toyGrid">
+                    <button type="button" class="tag-btn multi" data-val="跳蛋"><svg class="icon icon-toy"><use href="#icon-egg"/></svg> 跳蛋</button>
+                    <button type="button" class="tag-btn multi" data-val="震动棒"><svg class="icon icon-toy"><use href="#icon-vibrate"/></svg> 震动棒</button>
+                    <button type="button" class="tag-btn multi" data-val="假阳具"><svg class="icon icon-toy"><use href="#icon-zap"/></svg> 假阳具</button>
+                    <button type="button" class="tag-btn multi" data-val="肛塞"><svg class="icon icon-kink"><use href="#icon-plug"/></svg> 肛塞</button>
+                    <button type="button" class="tag-btn multi" data-val="前列腺按摩器"><svg class="icon icon-kink"><use href="#icon-target"/></svg> 前列腺按摩</button>
+                    <button type="button" class="tag-btn multi" data-val="飞机杯"><svg class="icon icon-toy"><use href="#icon-plane"/></svg> 飞机杯</button>
+                    <button type="button" class="tag-btn multi" data-val="吮吸玩具"><svg class="icon icon-toy"><use href="#icon-heart"/></svg> 吮吸玩具</button>
+                    <button type="button" class="tag-btn multi" data-val="按摩棒"><svg class="icon icon-toy"><use href="#icon-wand"/></svg> 按摩棒</button>
+                    <button type="button" class="tag-btn multi" data-val="眼罩"><svg class="icon icon-kink"><use href="#icon-eye-off"/></svg> 眼罩</button>
+                    <button type="button" class="tag-btn multi" data-val="口球"><svg class="icon icon-kink"><use href="#icon-circle"/></svg> 口球</button>
+                    <button type="button" class="tag-btn multi" data-val="羽毛"><svg class="icon icon-toy"><use href="#icon-feather"/></svg> 羽毛</button>
+                    <button type="button" class="tag-btn multi" data-val="手铐"><svg class="icon icon-kink"><use href="#icon-link"/></svg> 手铐</button>
+                    <button type="button" class="tag-btn multi" data-val="乳夹"><svg class="icon icon-kink"><use href="#icon-clip"/></svg> 乳夹</button>
+                    <button type="button" class="tag-btn multi" data-val="润滑剂"><svg class="icon icon-blue"><use href="#icon-droplet"/></svg> 润滑剂</button>
+                    <button type="button" class="tag-btn multi" data-val="延时喷剂"><svg class="icon icon-teal"><use href="#icon-hourglass"/></svg> 延时喷剂</button>
+                    <button type="button" class="tag-btn multi" data-val="情趣内衣"><svg class="icon icon-mood-romantic"><use href="#icon-shirt"/></svg> 情趣内衣</button>
+                    <button type="button" class="tag-btn multi" data-val="丝袜"><svg class="icon icon-mood-romantic"><use href="#icon-shirt"/></svg> 丝袜</button>
+                    <button type="button" class="tag-btn multi" data-val="按摩油"><svg class="icon icon-amber"><use href="#icon-flask"/></svg> 按摩油</button>
+                    <button type="button" class="tag-btn multi" data-val="冰块"><svg class="icon icon-blue"><use href="#icon-snowflake"/></svg> 冰块</button>
+                    <button type="button" class="tag-btn multi" data-val="蜡烛"><svg class="icon icon-mood-fire"><use href="#icon-candle"/></svg> 蜡烛</button>
+                    <button type="button" class="tag-btn multi" data-val="遥控玩具"><svg class="icon icon-toy"><use href="#icon-smartphone"/></svg> 遥控玩具</button>
+                    <button type="button" class="tag-btn multi" data-val="SM套装"><svg class="icon icon-kink"><use href="#icon-command"/></svg> SM套装</button>
+                    <button type="button" class="tag-btn multi" data-val="其他"><svg class="icon icon-mood-tired"><use href="#icon-package"/></svg> 其他</button>
+                </div>
+                <input type="hidden" id="recToy" value="">
+            </div>
+
+            <!-- 13. 射精位置（可多选） -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-droplet"/></svg> 射精位置（可多选）</label>
+                <div class="multi-tag-grid ej-grid" id="cumshotGrid">
+                    <button type="button" class="tag-btn multi active" data-val="阴道内"><svg class="icon icon-mood-romantic"><use href="#icon-heart"/></svg> 阴道内</button>
+                    <button type="button" class="tag-btn multi" data-val="胸部"><svg class="icon icon-body"><use href="#icon-breast"/></svg> 胸部</button>
+                    <button type="button" class="tag-btn multi" data-val="乳房"><svg class="icon icon-body"><use href="#icon-breast"/></svg> 乳房</button>
+                    <button type="button" class="tag-btn multi" data-val="腹部"><svg class="icon icon-body"><use href="#icon-stomach"/></svg> 腹部</button>
+                    <button type="button" class="tag-btn multi" data-val="背部"><svg class="icon icon-body"><use href="#icon-user"/></svg> 背部</button>
+                    <button type="button" class="tag-btn multi" data-val="臀部"><svg class="icon icon-body"><use href="#icon-buttocks"/></svg> 臀部</button>
+                    <button type="button" class="tag-btn multi" data-val="大腿"><svg class="icon icon-body"><use href="#icon-legs"/></svg> 大腿内侧</button>
+                    <button type="button" class="tag-btn multi" data-val="颜面"><svg class="icon icon-body"><use href="#icon-smile"/></svg> 颜面</button>
+                    <button type="button" class="tag-btn multi" data-val="口内"><svg class="icon icon-mood-romantic"><use href="#icon-lips"/></svg> 口内</button>
+                    <button type="button" class="tag-btn multi" data-val="肛内"><svg class="icon icon-purple"><use href="#icon-target"/></svg> 肛内</button>
+                    <button type="button" class="tag-btn multi" data-val="脚"><svg class="icon icon-body"><use href="#icon-foot"/></svg> 脚/足部</button>
+                    <button type="button" class="tag-btn multi" data-val="手"><svg class="icon icon-body"><use href="#icon-hand"/></svg> 手部</button>
+                    <button type="button" class="tag-btn multi" data-val="腋下"><svg class="icon icon-body"><use href="#icon-armpit"/></svg> 腋下</button>
+                    <button type="button" class="tag-btn multi" data-val="脖颈"><svg class="icon icon-body"><use href="#icon-neck"/></svg> 脖颈</button>
+                    <button type="button" class="tag-btn multi" data-val="头发"><svg class="icon icon-body"><use href="#icon-hair"/></svg> 头发</button>
+                    <button type="button" class="tag-btn multi" data-val="体外"><svg class="icon icon-mood-sober"><use href="#icon-droplet"/></svg> 体外</button>
+                    <button type="button" class="tag-btn multi" data-val="其他"><svg class="icon icon-mood-tired"><use href="#icon-more-horizontal"/></svg> 其他</button>
+                </div>
+                <input type="hidden" id="recCumshot" value="">
+            </div>
+
+            <!-- 14. 高潮次数 -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-star"/></svg> 高潮次数（双方合计）</label>
+                <div class="mood-grid" id="recOrgasm">
+                    <button type="button" class="mood-btn" data-val="0"><svg class="icon icon-mood-tired"><use href="#icon-circle"/></svg> 0次</button>
+                    <button type="button" class="mood-btn" data-val="1"><svg class="icon icon-amber"><use href="#icon-star"/></svg> 1次</button>
+                    <button type="button" class="mood-btn active" data-val="2"><svg class="icon icon-amber"><use href="#icon-star"/></svg> 2次</button>
+                    <button type="button" class="mood-btn" data-val="3"><svg class="icon icon-mood-satisfied"><use href="#icon-star"/></svg> 3次</button>
+                    <button type="button" class="mood-btn" data-val="4"><svg class="icon icon-mood-fire"><use href="#icon-sparkle"/></svg> 4次</button>
+                    <button type="button" class="mood-btn" data-val="5"><svg class="icon icon-mood-excited"><use href="#icon-sparkle"/></svg> 5次+</button>
+                </div>
+                <input type="hidden" id="recOrgasmVal" value="2">
+            </div>
+
+            <!-- 15. 愉悦程度 -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-star"/></svg> 愉悦程度 (<span id="ratingDisplayVal">8</span>/10)</label>
+                <div class="rating-input">
+                    <button type="button" class="rating-btn" data-val="1">1</button>
+                    <button type="button" class="rating-btn" data-val="2">2</button>
+                    <button type="button" class="rating-btn" data-val="3">3</button>
+                    <button type="button" class="rating-btn" data-val="4">4</button>
+                    <button type="button" class="rating-btn" data-val="5">5</button>
+                    <button type="button" class="rating-btn" data-val="6">6</button>
+                    <button type="button" class="rating-btn" data-val="7">7</button>
+                    <button type="button" class="rating-btn active" data-val="8">8</button>
+                    <button type="button" class="rating-btn" data-val="9">9</button>
+                    <button type="button" class="rating-btn" data-val="10">10</button>
+                </div>
+            </div>
+
+            <!-- 16. 心情 -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-thought"/></svg> 心情</label>
+                <div class="mood-grid" id="moodGrid">
+                    <button type="button" class="mood-btn active" data-val="happy"><svg class="icon icon-mood-happy"><use href="#icon-mood-happy"/></svg> 开心</button>
+                    <button type="button" class="mood-btn" data-val="romantic"><svg class="icon icon-mood-romantic"><use href="#icon-mood-romantic"/></svg> 浪漫</button>
+                    <button type="button" class="mood-btn" data-val="passionate"><svg class="icon icon-mood-excited"><use href="#icon-mood-excited"/></svg> 激情</button>
+                    <button type="button" class="mood-btn" data-val="wild"><svg class="icon icon-mood-fire"><use href="#icon-fire"/></svg> 狂野</button>
+                    <button type="button" class="mood-btn" data-val="tender"><svg class="icon icon-mood-tender"><use href="#icon-mood-calm"/></svg> 温柔</button>
+                    <button type="button" class="mood-btn" data-val="tired"><svg class="icon icon-mood-tired"><use href="#icon-mood-tired"/></svg> 疲惫</button>
+                    <button type="button" class="mood-btn" data-val="calm"><svg class="icon icon-mood-calm"><use href="#icon-mood-calm"/></svg> 平淡</button>
+                    <button type="button" class="mood-btn" data-val="frustrated"><svg class="icon icon-mood-sad"><use href="#icon-mood-sad"/></svg> 失落</button>
+                    <button type="button" class="mood-btn" data-val="curious"><svg class="icon icon-mood-curious"><use href="#icon-help-circle"/></svg> 好奇</button>
+                    <button type="button" class="mood-btn" data-val="sober"><svg class="icon icon-mood-sober"><use href="#icon-mood-calm"/></svg> 清醒</button>
+                    <button type="button" class="mood-btn" data-val="expect"><svg class="icon icon-mood-expect"><use href="#icon-mood-happy"/></svg> 期待</button>
+                    <button type="button" class="mood-btn" data-val="satisfied"><svg class="icon icon-mood-satisfied"><use href="#icon-mood-satisfied"/></svg> 满足</button>
+                    <button type="button" class="mood-btn" data-val="surprised"><svg class="icon icon-mood-surprised"><use href="#icon-mood-excited"/></svg> 惊喜</button>
+                    <button type="button" class="mood-btn" data-val="regret"><svg class="icon icon-mood-regret"><use href="#icon-mood-sad"/></svg> 遗憾</button>
+                    <button type="button" class="mood-btn" data-val="wanting"><svg class="icon icon-mood-wanting"><use href="#icon-mood-romantic"/></svg> 意犹未尽</button>
+                </div>
+                <input type="hidden" id="recMood" value="happy">
+            </div>
+
+            <!-- 17. 近期睡眠质量 -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-moon"/></svg> 近期睡眠质量</label>
+                <div class="mood-grid" id="recSleepQuality">
+                    <button type="button" class="mood-btn" data-val="bad"><svg class="icon icon-danger"><use href="#icon-mood-tired"/></svg> 很差</button>
+                    <button type="button" class="mood-btn" data-val="poor"><svg class="icon icon-warning"><use href="#icon-mood-anxious"/></svg> 较差</button>
+                    <button type="button" class="mood-btn active" data-val="normal"><svg class="icon icon-mood-tired"><use href="#icon-mood-calm"/></svg> 一般</button>
+                    <button type="button" class="mood-btn" data-val="good"><svg class="icon icon-mood-expect"><use href="#icon-mood-happy"/></svg> 良好</button>
+                    <button type="button" class="mood-btn" data-val="great"><svg class="icon icon-mood-satisfied"><use href="#icon-mood-satisfied"/></svg> 非常好</button>
+                </div>
+                <input type="hidden" id="recSleepQualityVal" value="normal">
+            </div>
+
+            <!-- 18. 备注 -->
+            <div class="form-group">
+                <label><svg class="icon"><use href="#icon-edit"/></svg> 备注</label>
+                <textarea id="recNotes" rows="3" placeholder="可选备注..."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" id="btnCancel">取消</button>
+            <button class="btn-confirm" id="btnConfirm">保存</button>
+        </div>
+    </div>
+</div>
+
+<!-- 添加经期弹窗 -->
+<div class="modal" id="modalAddPeriod">
+    <div class="modal-content modal-sm">
+        <div class="modal-header">
+            <h3>添加经期记录</h3>
+            <button class="modal-close" id="modalPeriodClose">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>开始日期</label>
+                    <div class="datetime-wrap" data-picker="period-start-date">
+                        <button type="button" class="btn-datetime" id="periodStartDateBtn">
+                            <svg class="icon"><use href="#icon-calendar"/></svg>
+                            <span id="periodStartDateText"></span>
+                            <svg class="icon icon-chevron"><use href="#icon-chevron-right"/></svg>
+                        </button>
+                        <input type="hidden" id="periodStartDate" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>开始时间</label>
+                    <div class="datetime-wrap" data-picker="period-start-time">
+                        <button type="button" class="btn-datetime" id="periodStartTimeBtn">
+                            <svg class="icon"><use href="#icon-clock"/></svg>
+                            <span id="periodStartTimeText">00:00</span>
+                            <svg class="icon icon-chevron"><use href="#icon-chevron-right"/></svg>
+                        </button>
+                        <input type="hidden" id="periodStartTime" value="00:00">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>结束日期（可选）</label>
+                    <div class="datetime-wrap" data-picker="period-end-date">
+                        <button type="button" class="btn-datetime" id="periodEndDateBtn">
+                            <svg class="icon"><use href="#icon-calendar"/></svg>
+                            <span id="periodEndDateText"></span>
+                            <svg class="icon icon-chevron"><use href="#icon-chevron-right"/></svg>
+                        </button>
+                        <input type="hidden" id="periodEndDate" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>结束时间</label>
+                    <div class="datetime-wrap" data-picker="period-end-time">
+                        <button type="button" class="btn-datetime" id="periodEndTimeBtn">
+                            <svg class="icon"><use href="#icon-clock"/></svg>
+                            <span id="periodEndTimeText">00:00</span>
+                            <svg class="icon icon-chevron"><use href="#icon-chevron-right"/></svg>
+                        </button>
+                        <input type="hidden" id="periodEndTime" value="00:00">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>备注</label>
+                <textarea id="periodNotes" rows="2" placeholder="可选备注"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" id="btnPeriodCancel">取消</button>
+            <button class="btn-confirm" id="btnPeriodConfirm">保存</button>
+        </div>
+    </div>
+</div>
+
+<!-- 查看记录详情弹窗 -->
+<div class="modal" id="modalViewRecord">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="viewRecordTitle">记录详情</h3>
+            <button class="modal-close" id="modalViewClose">×</button>
+        </div>
+        <div class="modal-body" id="viewRecordBody"></div>
+        <div class="modal-footer">
+            <button class="btn-delete-record" id="btnDeleteRecordInView">删除</button>
+            <button class="btn-cancel" id="btnViewClose">关闭</button>
+        </div>
+    </div>
+</div>
+
+<!-- 日历日期详情弹窗 -->
+<div class="modal" id="modalDayDetail">
+    <div class="modal-content day-detail-modal">
+        <div class="modal-header">
+            <h3 id="dayDetailTitle">日期记录</h3>
+            <button class="modal-close" id="dayDetailClose">×</button>
+        </div>
+        <div class="modal-body" id="dayDetailBody"></div>
+        <div class="modal-footer">
+            <button class="btn-cancel" id="dayDetailAddNew"><svg class="icon"><use href="#icon-plus"/></svg> 添加记录</button>
+            <button class="btn-cancel" id="dayDetailCloseBtn">关闭</button>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Date Picker -->
+<div id="datePicker" class="cp-overlay">
+  <div class="cp-panel">
+    <div class="cp-header">
+      <button class="cp-nav-btn" id="cpPrevYear">◀</button>
+      <span id="cpYearLabel"></span>
+      <button class="cp-nav-btn" id="cpNextYear">▶</button>
+    </div>
+    <div class="cp-months" id="cpMonths"></div>
+    <div class="cp-days-header"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+    <div class="cp-days" id="cpDays"></div>
+    <div class="cp-footer">
+      <button class="cp-btn cp-cancel">取消</button>
+      <button class="cp-btn cp-today">今天</button>
+      <button class="cp-btn cp-ok">确定</button>
+    </div>
+  </div>
+</div>
+<!-- Custom Time Picker -->
+<div id="timePicker" class="tp-overlay">
+  <div class="tp-panel">
+    <div class="tp-header"><span id="tpLabel">选择时间</span></div>
+    <div class="tp-wheel-container">
+      <div class="tp-wheel" id="tpHourWheel"></div>
+      <div class="tp-colon">:</div>
+      <div class="tp-wheel" id="tpMinuteWheel"></div>
+    </div>
+    <div class="tp-footer">
+      <button class="cp-btn cp-cancel">取消</button>
+      <button class="cp-btn cp-ok">确定</button>
+    </div>
+  </div>
+</div>
+<script src="/intimacy_static/app.js?v=4.8.0"></script>
+</body>
+</html>
