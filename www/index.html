@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>亲密空间</title>
-    <link rel="stylesheet" href="/intimacy_static/style.css?v=4.8.0">
+    <link rel="stylesheet" href="/intimacy_static/style.css?v=4.9.33">
 </head>
 <body>
 
@@ -167,16 +167,37 @@
     <!-- 计时器 -->
     <section class="timer-section" id="timerSection">
         <div class="timer-card" id="timerCard">
+            <div class="timer-crosshair"></div>
+            <div class="timer-float-hearts">
+                <span class="fh">&#10084;</span>
+                <span class="fh">&#10084;</span>
+                <span class="fh">&#10084;</span>
+                <span class="fh">&#10084;</span>
+                <span class="fh">&#10084;</span>
+                <span class="fh">&#10084;</span>
+            </div>
             <div class="timer-display" id="timerDisplay">
                 <span class="timer-num" id="timerMin">00</span><span class="timer-colon">:</span><span class="timer-num" id="timerSec">00</span>
             </div>
+            <div class="timer-heartbeat" id="timerHeartbeat">&#10084;</div>
             <div class="timer-label" id="timerLabel">准备就绪</div>
             <div class="timer-actions">
-                <button class="timer-btn timer-start" id="timerStart"><svg class="icon"><use href="#icon-play"/></svg> 开始计时</button>
-                <button class="timer-btn timer-stop" id="timerStop" style="display:none;"><svg class="icon"><use href="#icon-square"/></svg> 结束并记录</button>
-                <button class="timer-btn timer-cancel" id="timerCancel" style="display:none;"><svg class="icon"><use href="#icon-x"/></svg> 取消</button>
+                <button class="timer-btn timer-start" id="timerStart">开始计时</button>
+                <button class="timer-btn timer-stop" id="timerStop" style="display:none;">结束并记录</button>
+                <button class="timer-btn timer-cancel" id="timerCancel" style="display:none;">取消</button>
             </div>
             <div class="timer-ring" id="timerRing"></div>
+        </div>
+    </section>
+
+    <!-- 每日洞察 -->
+    <section class="insight-section" id="insightSection">
+        <div class="insight-card" id="insightCard">
+            <div class="insight-icon" id="insightIcon"></div>
+            <div class="insight-body">
+                <div class="insight-title" id="insightTitle">每日洞察</div>
+                <div class="insight-text" id="insightText">记录让数据说话，刷新看看有什么新发现~</div>
+            </div>
         </div>
     </section>
 
@@ -245,27 +266,37 @@
 
         <!-- 记录列表 -->
         <div class="tab-content" id="tab-records" style="position:relative;">
-            <div class="filter-bar-grid" id="filterBarGrid">
-                <div class="filter-item">
-                    <select id="filterMonth" class="filter-select-mini"><option value="">全部</option></select>
-                </div>
+            <div class="filter-bar-all" id="filterBarGrid">
+                <div class="filter-bar-grid">
                 <div class="filter-item">
                     <button class="filter-icon-btn" data-filter="category" title="类别"><svg class="icon"><use href="#icon-heart"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="duration" title="时长"><svg class="icon"><use href="#icon-clock"/></svg></button>
                 </div>
                 <div class="filter-item">
                     <button class="filter-icon-btn" data-filter="location" title="地点"><svg class="icon"><use href="#icon-map-pin"/></svg></button>
                 </div>
                 <div class="filter-item">
-                    <button class="filter-icon-btn" data-filter="mood" title="心情"><svg class="icon"><use href="#icon-smile"/></svg></button>
+                    <button class="filter-icon-btn" data-filter="alcohol" title="酒精"><svg class="icon"><use href="#icon-flask"/></svg></button>
                 </div>
                 <div class="filter-item">
                     <button class="filter-icon-btn" data-filter="initiator" title="谁主动"><svg class="icon"><use href="#icon-users"/></svg></button>
                 </div>
                 <div class="filter-item">
-                    <button class="filter-icon-btn" data-filter="contraception" title="避孕"><svg class="icon"><use href="#icon-shield"/></svg></button>
+                    <button class="filter-icon-btn" data-filter="cooperation" title="配合度"><svg class="icon"><use href="#icon-thumbs-up"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="libido" title="性欲"><svg class="icon"><use href="#icon-flame"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="foreplay" title="前戏"><svg class="icon"><use href="#icon-hand-heart"/></svg></button>
                 </div>
                 <div class="filter-item">
                     <button class="filter-icon-btn" data-filter="position" title="体位"><svg class="icon"><use href="#icon-hand"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="contraception" title="避孕"><svg class="icon"><use href="#icon-shield"/></svg></button>
                 </div>
                 <div class="filter-item">
                     <button class="filter-icon-btn" data-filter="method" title="方式"><svg class="icon"><use href="#icon-activity"/></svg></button>
@@ -277,16 +308,24 @@
                     <button class="filter-icon-btn" data-filter="ejaculation" title="射精"><svg class="icon"><use href="#icon-droplet"/></svg></button>
                 </div>
                 <div class="filter-item">
-                    <button class="filter-icon-btn" data-filter="alcohol" title="酒精"><svg class="icon"><use href="#icon-flask"/></svg></button>
+                    <button class="filter-icon-btn" data-filter="orgasm" title="高潮"><svg class="icon"><use href="#icon-star"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="pleasure" title="愉悦"><svg class="icon"><use href="#icon-heart"/></svg></button>
+                </div>
+                <div class="filter-item">
+                    <button class="filter-icon-btn" data-filter="mood" title="心情"><svg class="icon"><use href="#icon-smile"/></svg></button>
                 </div>
                 <div class="filter-item">
                     <button class="filter-icon-btn" data-filter="sleep_quality" title="睡眠"><svg class="icon"><use href="#icon-moon"/></svg></button>
                 </div>
-                <div class="filter-item" style="margin-left:auto;">
+                <div class="filter-item">
                     <button class="filter-icon-btn" id="btnClearFilters" title="清除筛选" style="color:#e53e3e;"><svg class="icon"><use href="#icon-x"/></svg></button>
                 </div>
-                <div class="filter-item">
-                    <button class="btn-secondary" id="btnToggleAllRecords">全部展开 ▾</button>
+                </div>
+                <div class="filter-bar-row-2">
+                    <select id="filterMonth" class="filter-select-half"><option value="">全部月份</option></select>
+                    <button class="btn-secondary filter-btn-half" id="btnToggleAllRecords">全部展开 ▾</button>
                 </div>
             </div>
             <!-- 筛选选项面板 -->
@@ -972,6 +1011,6 @@
     </div>
   </div>
 </div>
-<script src="/intimacy_static/app.js?v=4.8.0"></script>
+<script src="/intimacy_static/app.js?v=4.9.33"></script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 (function() {
     'use strict';
     var API = '/intimacy_data';
-    var VERSION = '5.3.0';
+    var VERSION = '5.4.1';
 
     // 全局状态
     var state = {
@@ -93,6 +93,170 @@
         $('qsMonth').textContent = s.month_count || 0;
         $('qsYear').textContent = s.year_count || 0;
         $('qsAvg').textContent = s.avg_pleasure || 0;
+        renderInsight();
+    }
+
+    // ═══════════════════════════════════════════════
+    //  每日洞察引擎
+    // ═══════════════════════════════════════════════
+    function _pickRandom(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+    function _getInsightIcon(type) {
+        var map = {
+            warm: 'insight-icon icon-warm',
+            tip: 'insight-icon icon-tip',
+            trend: 'insight-icon icon-trend',
+            safe: 'insight-icon icon-safe',
+            period: 'insight-icon icon-period',
+            empty: 'insight-icon icon-empty'
+        };
+        return map[type] || 'insight-icon icon-tip';
+    }
+    function _renderInsightCard(iconClass, iconEmoji, title, text) {
+        var iconEl = $('insightIcon');
+        iconEl.className = iconClass;
+        iconEl.textContent = iconEmoji;
+        $('insightTitle').textContent = title;
+        $('insightText').textContent = text;
+    }
+    function generateInsightText(s) {
+        var mc = (s && s.month_count) || 0;
+        var ap = (s && s.avg_pleasure) || 0;
+        var ad = (s && s.avg_duration) || 0;
+        var safe = s && s.is_safe_period;
+        var phase = s && s.period_phase;
+        var total = (s && s.total_count) || 0;
+        var positions = s && s.positions;
+        var posCount = positions ? Object.keys(positions).length : 0;
+        var moods = s && s.moods;
+        var methods = s && s.methods;
+        var methCount = methods ? Object.keys(methods).length : 0;
+        var happyMood = moods && (moods['happy'] || moods['romantic'] || moods['passionate']);
+        var calmMood = moods && (moods['calm'] || moods['satisfied']);
+
+        var pool = [];
+        
+        // 池式匹配：收集所有适用的洞察
+        if (total === 0) pool.push(
+            { t:'warm', i:'💖', title:'开始记录', text:'每一次记录都是重要的数据，点击顶部 + 开始' },
+            { t:'warm', i:'💓', title:'新手指引', text:'记录你的第一次，从此看清彼此的偏好与习惯' },
+            { t:'tip',  i:'✨', title:'开始探索', text:'记录会让你意外地发现自己和对方的新爱好' }
+        );
+        if (mc === 0 && total > 0) pool.push(
+            { t:'warm', i:'💫', title:'本月空白', text:'本月还没记录，没压力，遇见合适的时机再记' },
+            { t:'warm', i:'💗', title:'慢慢来', text:'连结见面的感觉比记录次数更重要' },
+            { t:'tip',  i:'📝', title:'愿望记录', text:'自然发生的拥抱比刻意赶工更值得珍惜' }
+        );
+        if (mc >= 10 && ap >= 8) pool.push(
+            { t:'trend', i:'🔥', title:'羡慕一幕', text:'本月'+mc+'次，均分'+ap.toFixed(1)+'/10！关系良好的重要指标' },
+            { t:'trend', i:'✨', title:'高转训练', text:'高质量性生活是关系的润滑剂，继续保持节奏' },
+            { t:'warm', i:'💞', title:'现实转化', text:'把当前的安全感和节奏分享给伴侣，一起进步' },
+            { t:'trend', i:'🎯', title:'巅峰状态', text:'你们正处于一段美妙的亲密时光，享受每刻' }
+        );
+        if (mc >= 8 && ap > 0 && ap < 6) pool.push(
+            { t:'warm', i:'💫', title:'谈谈更好', text:'本月'+mc+'次但均分仅'+ap.toFixed(1)+'/10，质量比数量重要' },
+            { t:'tip',  i:'📝', title:'品质优先', text:'把"每周一次"改成"每次都用心"，专注当下更有效' },
+            { t:'warm', i:'💗', title:'感受重要', text:'下次试试放慢节奏，体验什么让你最开心' }
+        );
+        if (mc >= 1 && mc <= 3 && ap >= 7.5) pool.push(
+            { t:'trend', i:'💞', title:'精品模式', text:'少而精！均分'+ap.toFixed(1)+'/10，质量远胜数量' },
+            { t:'warm', i:'💖', title:'专注体验', text:'你更喜欢"水到渠成"的感觉，这种精品模式让彼此更珍贵' },
+            { t:'tip',  i:'✨', title:'保持正观', text:'高质量无需频繁，稳定维护就好' }
+        );
+        if (mc >= 1 && mc <= 3 && ap >= 5 && ap < 7.5) pool.push(
+            { t:'tip',  i:'📝', title:'小提示', text:'本月'+mc+'次，均分'+ap.toFixed(1)+'/10，试试沟通最喜欢的时段' },
+            { t:'warm', i:'💗', title:'感情稳定', text:'每周维持一次能让人更稳固，不必急攻' },
+            { t:'trend', i:'💫', title:'谈谈往事', text:'自然连结的感觉往往比"制造一次"更让人放松' }
+        );
+        if (ap > 0 && ap < 5) pool.push(
+            { t:'warm', i:'💫', title:'感受在先', text:'愉悦度低不是问题，有时只是身体状态的反映' },
+            { t:'tip',  i:'📝', title:'沟通而已', text:'和伴侣聊聊最喜欢什么时候？有时只是没达成共识' },
+            { t:'warm', i:'💗', title:'无需担忧', text:'不必要苛责自己，身体状态好了感觉自然会更好' },
+            { t:'tip',  i:'🧠', title:'探索新方式', text:'试试记录下感到舒适的环境——光线、声音、温度' }
+        );
+        if (ad > 0 && ad < 10) pool.push(
+            { t:'tip',  i:'⏱️', title:'前戏不忽视', text:'均长'+ad.toFixed(0)+'分钟，最美感觉在前戏和互动中' },
+            { t:'warm', i:'💞', title:'质量比时长重要', text:'短时没阻碍精致体验，多沟通能让人更愉悦' }
+        );
+        if (ad > 60) pool.push(
+            { t:'trend', i:'⏱️', title:'时长也是资产', text:'均长'+ad.toFixed(0)+'分钟是美好经历，专注感受更佳' },
+            { t:'tip',  i:'📝', title:'精不宜多', text:'长≠好，试着沉浸每段时光而非追求日厉' }
+        );
+        if (posCount >= 2 && posCount <= 4) pool.push(
+            { t:'tip',  i:'💫', title:'尚有空间', text:posCount+'种体位是个好开端，记录就能发现偏好' },
+            { t:'warm', i:'✨', title:'探索无止境', text:'不同体位带来不同视角，多样性能提升二人渗入' },
+            { t:'tip',  i:'🔍', title:'扩展探索', text:'下回尝试一种新体位然后分享感受' },
+            { t:'warm', i:'💗', title:'源源不断', text:'体位探索像一本无限的书，每页都是新收获' }
+        );
+        if (posCount > 5) pool.push(
+            { t:'trend', i:'💫', title:'体位大师', text:'试行过'+posCount+'种体位，很美好的探索经历' },
+            { t:'warm', i:'✨', title:'经验赋能', text:'记录下了就是最好的参考：何时何境的体位最渗透' },
+            { t:'tip',  i:'🎯', title:'体位调度', text:posCount+'种体位让你们的二人世界进入了新阶段' },
+            { t:'trend', i:'📈', title:'多样资产', text:posCount+'种体位丰富了体验库，多样性越高愉悦越稳' },
+            { t:'warm', i:'💖', title:'互相启发', text:'可以让对方选择下次体位——双向选择更赋能' },
+            { t:'tip',  i:'💡', title:'小小创意', text:'有时不需要新体位，换环境或节奏就已焕然一新' }
+        );
+        if (methCount >= 2 && methCount <= 4) pool.push(
+            { t:'tip',  i:'💞', title:'方式开发', text:methCount+'种导入方式，多样性是开启关系新篇章的钥匙' },
+            { t:'warm', i:'💖', title:'探索继续', text:'这个月再试一种新方式，记录下进展' }
+        );
+        if (mc >= 4 && mc <= 8) pool.push(
+            { t:'trend', i:'💖', title:'稳中有序', text:'本月'+mc+'次达到良好平衡，频率恰恰好' },
+            { t:'warm', i:'💗', title:'健康模式', text:'研究显示每周1-2次是人体理想的频率范围' },
+            { t:'tip',  i:'📝', title:'记录一下点滴', text:mc+'次记录，试试每次写一句"一个点滴"' },
+            { t:'tip',  i:'🧠', title:'前戏的力量', text:'一段长的拥抱比直接进入更让伴侣感到被重视' },
+            { t:'warm', i:'💫', title:'适度即好', text:mc+'次不多不少，重要的是每次的质量与满足感' },
+            { t:'trend', i:'📈', title:'数据贴士', text:mc+'次的数据能帮你们发现自己的节奏与偏好' }
+        );
+        if (happyMood) pool.push(
+            { t:'warm', i:'😊', title:'好心情降临', text:'记录显示你们的心情体验很好，好心情是高转的模型物' },
+            { t:'trend', i:'💞', title:'环境加分', text:'好心情让人放下戒备，多创造这种氛围会更好' },
+            { t:'tip',  i:'✨', title:'心情秘诀', text:'记录里充满了快乐和满足，积极情绪是亲密关系的基石' },
+            { t:'warm', i:'💖', title:'幸福时光', text:'看到这么多美好心情真是令人欣慰，相互传递幸福' },
+            { t:'trend', i:'🌟', title:'正向循环', text:'好心情→好体验→更好心情，你们已进入良性循环' }
+        );
+        if (calmMood) pool.push(
+            { t:'warm', i:'😌', title:'平和之美', text:'平静不是匮乏，而是一种常被忽视的财富' },
+            { t:'warm', i:'🕊️', title:'静谧力量', text:'在平静中找到安全感，本身已是最好的关系状态' }
+        );
+        if (safe === true) pool.push(
+            { t:'safe', i:'🎉', title:'安全期提醒', text:'暂且无风险阶段，可以更放松地享受二人世界' },
+            { t:'safe', i:'💞', title:'无抵抗日', text:'安全期内试试一些平时没时间尝试的新体位' },
+            { t:'safe', i:'💗', title:'淡安时刻', text:'无抵抗压力的时刻让彼此更全然专注于自身感受' },
+            { t:'safe', i:'🌿', title:'自在时周', text:'安全期是进行探索尝试的好时机，让高温自然形成' }
+        );
+        if (phase === '易孕期') pool.push(
+            { t:'period', i:'⚠️', title:'易孕期提醒', text:'目前处于易孕期，如果暂无孕育计划请采取安全措施' },
+            { t:'period', i:'💭', title:'生命力绽放', text:'易孕期伴侣特别热情——利用此时多沟通增进理解' }
+        );
+        if (phase === '经期') pool.push(
+            { t:'period', i:'👋', title:'经期时刻', text:'经期也可以很轻松，多说话多拥抱比贴身更重要' },
+            { t:'warm', i:'❤️', title:'照料时刻', text:'经期是体力休息的日子，让关系更紧密的方式可能是更多谈心' }
+        );
+        
+        // 至少返回1条兜底
+        if (pool.length === 0) pool.push(
+            { t:'tip',  i:'📝', title:'小贴士', text:'多记录能让你发现自己的见解，下回试试记录一个"小实验"' },
+            { t:'warm', i:'💖', title:'继续维持', text:'每次记录都是重要的数据，随着时间能看清彼此' },
+            { t:'tip',  i:'🧠', title:'沟通的重要', text:'开放式沟通"喜欢什么"的两人，关系质量平均高出40%' },
+            { t:'trend', i:'📈', title:'观察自己', text:'随着记录增多，你能看清自己在不同时段的状态变化' },
+            { t:'warm', i:'💞', title:'无条件的爱', text:'最美好的经历往往很简单：无抵抗、无压力、全情注入' }
+        );
+        
+        return _pickRandom(pool);
+    }
+    function renderInsight() {
+        var s = state.stats;
+        if (!s) return;
+        var tip = generateInsightText(s);
+        if (!tip) return;
+        _renderInsightCard(
+            _getInsightIcon(tip.t),
+            tip.i,
+            tip.title,
+            tip.text
+        );
     }
 
     // ── 日历年月快速选择 ──
@@ -283,34 +447,52 @@
             {val:'sex',label:'做爱'},{val:'masturbation',label:'自慰'},{val:'dream',label:'春梦'}
         ]},
         location: { title: '地点', options: [
-            {val:'卧室',label:'卧室'},{val:'客厅',label:'客厅'},{val:'浴室',label:'浴室'},{val:'酒店',label:'酒店'},{val:'户外',label:'户外'},{val:'车内',label:'车内'}
+            {val:'家',label:'家'},{val:'卧室',label:'卧室'},{val:'客厅',label:'客厅'},{val:'浴室',label:'浴室'},{val:'厨房',label:'厨房'},{val:'阳台',label:'阳台'},{val:'书房',label:'书房'},{val:'酒店',label:'酒店'},{val:'民宿',label:'民宿'},{val:'车里',label:'车里'},{val:'野外',label:'野外'},{val:'露营',label:'露营'},{val:'海边',label:'海边'},{val:'沙发',label:'沙发'},{val:'楼梯间',label:'楼梯间'},{val:'办公室',label:'办公室'},{val:'其他',label:'其他'}
         ]},
         mood: { title: '心情', options: [
-            {val:'happy',label:'开心'},{val:'romantic',label:'浪漫'},{val:'passionate',label:'激情'},{val:'tired',label:'疲惫'},{val:'calm',label:'平淡'},{val:'wild',label:'狂野'},{val:'tender',label:'温柔'},{val:'frustrated',label:'失落'},{val:'curious',label:'好奇'},{val:'sober',label:'清醒'},{val:'expect',label:'期待'},{val:'satisfied',label:'满足'},{val:'surprised',label:'惊喜'},{val:'regret',label:'遗憾'},{val:'wanting',label:'意犹未尽'}
+            {val:'happy',label:'开心'},{val:'romantic',label:'浪漫'},{val:'passionate',label:'激情'},{val:'wild',label:'狂野'},{val:'tender',label:'温柔'},{val:'tired',label:'疲惫'},{val:'calm',label:'平淡'},{val:'frustrated',label:'失落'},{val:'curious',label:'好奇'},{val:'sober',label:'清醒'},{val:'expect',label:'期待'},{val:'satisfied',label:'满足'},{val:'surprised',label:'惊喜'},{val:'regret',label:'遗憾'},{val:'wanting',label:'意犹未尽'}
         ]},
         initiator: { title: '谁主动', options: [
-            {val:'我',label:'我'},{val:'伴侣',label:'伴侣'},{val:'双方主动',label:'双方主动'}
+            {val:'男方主动',label:'男方主动'},{val:'女方主动',label:'女方主动'},{val:'双方主动',label:'双方主动'},{val:'自然发生',label:'自然发生'}
         ]},
         contraception: { title: '避孕', options: [
-            {val:'condom',label:'安全套'},{val:'none',label:'无保护'},{val:'pill',label:'避孕药'},{val:'iud',label:'节育器'},{val:'withdrawal',label:'体外'},{val:'safe',label:'安全期'},{val:'planb',label:'紧急避孕'}
+            {val:'condom',label:'安全套'},{val:'none',label:'无保护'},{val:'pill',label:'短效避孕药'},{val:'iud',label:'宫内节育器'},{val:'withdrawal',label:'体外射精'},{val:'safe',label:'安全期'},{val:'planb',label:'紧急避孕药'}
         ]},
         position: { title: '体位', options: [
-            {val:'传教士',label:'传教士'},{val:'女上',label:'女上'},{val:'后入',label:'后入'},{val:'站立',label:'站立'},{val:'坐姿',label:'坐姿'},{val:'侧入',label:'侧入'}
+            {val:'传教士',label:'传教士'},{val:'女上',label:'女上'},{val:'后入',label:'后入'},{val:'侧入',label:'侧入'},{val:'站立',label:'站立'},{val:'坐姿',label:'坐姿'},{val:'跪姿',label:'跪姿'},{val:'趴姿',label:'趴姿'},{val:'抱姿',label:'抱姿'},{val:'站式后入',label:'站式后入'},{val:'骑乘位',label:'骑乘位'},{val:'背骑式',label:'背骑式'},{val:'69',label:'69'},{val:'摇椅式',label:'摇椅式'},{val:'双腿夹紧',label:'双腿夹紧'},{val:'双腿分开',label:'双腿分开'},{val:'沙发姿势',label:'沙发姿势'},{val:'淋浴姿势',label:'淋浴姿势'},{val:'其他',label:'其他'}
         ]},
         method: { title: '方式', options: [
-            {val:'阴道性交',label:'阴道性交'},{val:'口交',label:'口交'},{val:'手交',label:'手交'},{val:'肛交',label:'肛交'},{val:'足交',label:'足交'},{val:'乳交',label:'乳交'}
+            {val:'阴道性交',label:'阴道性交'},{val:'口交女→男',label:'女给男口'},{val:'口交男→女',label:'男给女口'},{val:'指交',label:'指交'},{val:'手交',label:'手交'},{val:'乳交',label:'乳交'},{val:'足交',label:'足交'},{val:'腿交',label:'腿交'},{val:'肛交',label:'肛交'},{val:'深喉',label:'深喉'},{val:'前列腺按摩',label:'前列腺按摩'},{val:'G点刺激',label:'G点刺激'},{val:'体外爱抚',label:'体外爱抚'},{val:'情趣视频',label:'情趣视频'},{val:'角色扮演',label:'角色扮演'},{val:'控制与服从',label:'控制与服从'},{val:'言语挑逗',label:'言语挑逗'},{val:'情趣按摩',label:'情趣按摩'},{val:'情趣游戏',label:'情趣游戏'},{val:'其他',label:'其他'}
         ]},
         toy_detail: { title: '玩具', options: [
-            {val:'跳蛋',label:'跳蛋'},{val:'震动棒',label:'震动棒'},{val:'假阳具',label:'假阳具'},{val:'飞机杯',label:'飞机杯'},{val:'润滑剂',label:'润滑剂'},{val:'特殊道具',label:'特殊道具'}
+            {val:'跳蛋',label:'跳蛋'},{val:'震动棒',label:'震动棒'},{val:'假阳具',label:'假阳具'},{val:'肛塞',label:'肛塞'},{val:'前列腺按摩器',label:'前列腺按摩器'},{val:'飞机杯',label:'飞机杯'},{val:'吮吸玩具',label:'吮吸玩具'},{val:'按摩棒',label:'按摩棒'},{val:'眼罩',label:'眼罩'},{val:'口球',label:'口球'},{val:'羽毛',label:'羽毛'},{val:'手铐',label:'手铐'},{val:'乳夹',label:'乳夹'},{val:'润滑剂',label:'润滑剂'},{val:'延时喷剂',label:'延时喷剂'},{val:'情趣内衣',label:'情趣内衣'},{val:'丝袜',label:'丝袜'},{val:'按摩油',label:'按摩油'},{val:'冰块',label:'冰块'},{val:'蜡烛',label:'蜡烛'},{val:'遥控玩具',label:'遥控玩具'},{val:'SM套装',label:'SM套装'},{val:'其他',label:'其他'}
         ]},
         ejaculation: { title: '射精', options: [
-            {val:'阴道内',label:'阴道内'},{val:'体外',label:'体外'},{val:'口内',label:'口内'},{val:'脸上',label:'脸上'},{val:'手上',label:'手上'},{val:'肚子上',label:'肚子上'},{val:'其他',label:'其他'}
+            {val:'阴道内',label:'阴道内'},{val:'胸部',label:'胸部'},{val:'乳房',label:'乳房'},{val:'腹部',label:'腹部'},{val:'背部',label:'背部'},{val:'臀部',label:'臀部'},{val:'大腿',label:'大腿内侧'},{val:'颜面',label:'颜面'},{val:'口内',label:'口内'},{val:'肛内',label:'肛内'},{val:'脚',label:'脚/足部'},{val:'手',label:'手部'},{val:'腋下',label:'腋下'},{val:'脖颈',label:'脖颈'},{val:'头发',label:'头发'},{val:'体外',label:'体外'},{val:'其他',label:'其他'}
         ]},
         alcohol: { title: '酒精', options: [
-            {val:'none',label:'无'},{val:'light',label:'微醺'},{val:'moderate',label:'适量'},{val:'heavy',label:'较多'}
+            {val:'none',label:'无'},{val:'light',label:'少量'},{val:'medium',label:'中量'},{val:'drunk',label:'醉酒'}
         ]},
         sleep_quality: { title: '睡眠', options: [
-            {val:'bad',label:'很差'},{val:'poor',label:'较差'},{val:'normal',label:'一般'},{val:'good',label:'较好'},{val:'great',label:'很好'}
+            {val:'bad',label:'很差'},{val:'poor',label:'较差'},{val:'normal',label:'一般'},{val:'good',label:'良好'},{val:'great',label:'非常好'}
+        ]},
+        cooperation: { title: '配合度', options: [
+            {val:'1',label:'抗拒'},{val:'2',label:'勉强'},{val:'3',label:'配合'},{val:'4',label:'积极'},{val:'5',label:'非常投入'}
+        ]},
+        libido: { title: '性欲', options: [
+            {val:'1',label:'很低'},{val:'2',label:'较低'},{val:'3',label:'一般'},{val:'4',label:'较强'},{val:'5',label:'爆炸'}
+        ]},
+        orgasm: { title: '高潮', options: [
+            {val:'0',label:'0次'},{val:'1',label:'1次'},{val:'2',label:'2次'},{val:'3',label:'3次'},{val:'4',label:'4次'},{val:'5',label:'5次+'}
+        ]},
+        duration: { title: '时长', range: true, options: [
+            {val:'0-10',label:'≤10分钟',min:0,max:10},{val:'11-30',label:'11-30分钟',min:11,max:30},{val:'31-60',label:'31-60分钟',min:31,max:60},{val:'61-9999',label:'1小时+',min:61,max:9999}
+        ]},
+        foreplay: { title: '前戏', range: true, options: [
+            {val:'0-5',label:'≤5分钟',min:0,max:5},{val:'6-15',label:'6-15分钟',min:6,max:15},{val:'16-30',label:'16-30分钟',min:16,max:30},{val:'31-9999',label:'30分钟+',min:31,max:9999}
+        ]},
+        pleasure: { title: '愉悦', range: true, options: [
+            {val:'1-3',label:'1-3分',min:1,max:3},{val:'4-6',label:'4-6分',min:4,max:6},{val:'7-8',label:'7-8分',min:7,max:8},{val:'9-10',label:'9-10分',min:9,max:10}
         ]}
     };
     // 当前筛选状态
@@ -328,11 +510,30 @@
         Object.keys(state.filter).forEach(function(key) {
             var val = state.filter[key];
             if (!val) return;
-            if (key === 'position' || key === 'method' || key === 'toy_detail' || key === 'ejaculation') {
+            var cfg = FILTER_CONFIG[key];
+            if (cfg && cfg.range) {
+                // 数值范围筛选
+                var parts = val.split('-');
+                var min = parseFloat(parts[0]);
+                var max = parseFloat(parts[1]);
+                records = records.filter(function(r) {
+                    var num = parseFloat(r[key]);
+                    if (isNaN(num)) return false;
+                    return num >= min && num <= max;
+                });
+            } else if (key === 'position' || key === 'method' || key === 'toy_detail' || key === 'ejaculation') {
                 // 多值字段（逗号分隔）
                 records = records.filter(function(r) {
                     var fieldVal = r[key] || '';
                     return fieldVal.split('、').indexOf(val) !== -1;
+                });
+            } else if (key === 'orgasm') {
+                // 高潮次数：5 表示 5次+
+                records = records.filter(function(r) {
+                    var num = parseInt(r[key]);
+                    if (isNaN(num)) return false;
+                    if (val === '5') return num >= 5;
+                    return num === parseInt(val);
                 });
             } else {
                 records = records.filter(function(r) { return (r[key]||'') === val; });
@@ -766,6 +967,28 @@
         }
         html += '</div>';
         container.innerHTML = html;
+        function doScroll() {
+            var blocks = container.querySelectorAll('.heatmap-month-block');
+            if (!blocks.length) return;
+            var curMonth = new Date().getMonth();
+            var target = blocks[curMonth];
+            if (!target) return;
+            var rect = container.getBoundingClientRect();
+            var tRect = target.getBoundingClientRect();
+            var wW = window.innerWidth || document.documentElement.clientWidth || 400;
+            var cW = rect.width || container.clientWidth || wW;
+            console.log('[Heatmap] rectW=' + rect.width + ' tRectW=' + tRect.width + ' tRectL=' + tRect.left + ' wW=' + wW);
+            if (cW > 0 && tRect.width > 0) {
+                container.scrollLeft = tRect.left - rect.left - (cW / 2) + (tRect.width / 2);
+            } else if (typeof target.scrollIntoView === 'function') {
+                target.scrollIntoView({ behavior: 'instant', inline: 'center', block: 'nearest' });
+            }
+        }
+        if (typeof ResizeObserver !== 'undefined') {
+            var ro = new ResizeObserver(function() { ro.disconnect(); setTimeout(doScroll, 100); });
+            ro.observe(container);
+        }
+        setTimeout(doScroll, 400);
     }
 
 
@@ -797,6 +1020,16 @@
             var cls = count === 0 ? 'level-0' : count <= 3 ? 'level-1' : count <= 8 ? 'level-2' : 'level-3';
             if (cat) cls = 'cat-' + cat;
             html += '<div class="h-cell '+cls+(isToday?' today':'')+'" title="'+ds+(cat?(' · '+catLabel):'')+'"></div>';
+        }
+
+        // 补足末尾空行，使所有月份统一为 6 行（42 格），下方次数对齐
+        var totalCells = startPad + daysInMonth;
+        var targetCells = 42;
+        var padCount = targetCells - totalCells;
+        if (padCount > 0) {
+            for (var p = 0; p < padCount; p++) {
+                html += '<div class="h-cell empty"></div>';
+            }
         }
 
         return html;
@@ -1412,31 +1645,69 @@
         renderWheelItems('tpMinuteWheel', 60, tpMinute, function(v) { tpMinute = v; });
     }
 
+    // 循环滚轮：生成 REPEAT_GROUPS 倍数据实现无限循环
+    var REPEAT_GROUPS = 100; // 足够多的重复组，保证用户不会滚到边界
+    var ITEM_HEIGHT = 44;
+
     function renderWheelItems(wheelId, count, selected, onChange) {
         var wheel = document.getElementById(wheelId);
         var html = '';
-        for (var i = 0; i < count; i++) {
-            var label = String(i).padStart(2, '0');
-            html += '<div class="tp-wheel-item' + (i === selected ? ' selected' : '') + '" data-val="' + i + '">' + label + '</div>';
+        // 生成 REPEAT_GROUPS * count 个项目，data-val 为实际值 (0..count-1)
+        for (var g = 0; g < REPEAT_GROUPS; g++) {
+            for (var i = 0; i < count; i++) {
+                var label = String(i).padStart(2, '0');
+                html += '<div class="tp-wheel-item' + (i === selected ? ' selected' : '') + '" data-val="' + i + '" data-group="' + g + '">' + label + '</div>';
+            }
         }
         wheel.innerHTML = html;
-        setTimeout(function() {
-            var item = wheel.querySelector('.selected');
-            if (item) wheel.scrollTop = item.offsetTop - (wheel.clientHeight / 2 - 22);
-        }, 10);
+        // 计算初始 scrollTop：定位到中间组（第 50 组）的 selected 项
+        var midGroup = Math.floor(REPEAT_GROUPS / 2);
+        var midSelected = wheel.querySelector('.tp-wheel-item.selected[data-group="' + midGroup + '"]');
+        if (midSelected) {
+            wheel.scrollTop = midSelected.offsetTop - (wheel.clientHeight / 2 - ITEM_HEIGHT / 2);
+        }
         wheel.querySelectorAll('.tp-wheel-item').forEach(function(item) {
             item.addEventListener('click', function() {
+                // 移除同轮所有 selected，仅给当前项加 selected
                 wheel.querySelectorAll('.tp-wheel-item').forEach(function(i){ i.classList.remove('selected'); });
-                this.classList.add('selected');
-                onChange(parseInt(this.dataset.val));
-                wheel.scrollTop = this.offsetTop - (wheel.clientHeight / 2 - 22);
+                // 给所有同 data-val 的项加 selected
+                var val = this.dataset.val;
+                wheel.querySelectorAll('.tp-wheel-item[data-val="' + val + '"]').forEach(function(i){ i.classList.add('selected'); });
+                onChange(parseInt(val));
+                wheel.scrollTop = this.offsetTop - (wheel.clientHeight / 2 - ITEM_HEIGHT / 2);
+                ensureLoopPosition(wheel, count, onChange);
             });
         });
-        bindWheelDrag(wheel, onChange);
-        bindMouseDrag(wheel, onChange);
+        bindWheelDrag(wheel, count, onChange);
+        bindMouseDrag(wheel, count, onChange);
     }
 
-    function bindWheelDrag(wheel, onChange) {
+    // 循环检测：当滚到接近边界时，静默跳回中间组
+    function ensureLoopPosition(wheel, count, onChange) {
+        var items = wheel.querySelectorAll('.tp-wheel-item');
+        if (!items.length) return;
+        var totalItems = items.length;
+        var midGroup = Math.floor(REPEAT_GROUPS / 2);
+        var midGroupStartIndex = midGroup * count;
+        // 计算当前居中项的索引
+        var centerIndex = Math.round((wheel.scrollTop + wheel.clientHeight / 2 - ITEM_HEIGHT / 2) / ITEM_HEIGHT);
+        if (centerIndex < 0) centerIndex = 0;
+        if (centerIndex >= totalItems) centerIndex = totalItems - 1;
+        // 如果偏离中间组太远（超过 count*2），静默重置到中间组的对应位置
+        var currentGroup = Math.floor(centerIndex / count);
+        if (Math.abs(currentGroup - midGroup) > 2) {
+            var val = centerIndex % count;
+            // 计算中间组中相同值的位置
+            var newScrollTop = (midGroup * count + val) * ITEM_HEIGHT - (wheel.clientHeight / 2 - ITEM_HEIGHT / 2);
+            // 保存当前选中状态
+            wheel.querySelectorAll('.tp-wheel-item').forEach(function(i){ i.classList.remove('selected'); });
+            wheel.querySelectorAll('.tp-wheel-item[data-val="' + val + '"][data-group="' + midGroup + '"]').forEach(function(i){ i.classList.add('selected'); });
+            // 静默重置 scrollTop（不触发动画）
+            wheel.scrollTop = newScrollTop;
+        }
+    }
+
+    function bindWheelDrag(wheel, count, onChange) {
         var startY = 0, startScroll = 0, isDragging = false;
         wheel.addEventListener('touchstart', function(e) {
             isDragging = true; startY = e.touches[0].clientY; startScroll = wheel.scrollTop;
@@ -1446,11 +1717,11 @@
             wheel.scrollTop = startScroll - (e.touches[0].clientY - startY);
         }, { passive: true });
         wheel.addEventListener('touchend', function() {
-            if (!isDragging) return; isDragging = false; snapWheel(wheel, onChange);
+            if (!isDragging) return; isDragging = false; snapWheel(wheel, count, onChange);
         });
     }
 
-    function bindMouseDrag(wheel, onChange) {
+    function bindMouseDrag(wheel, count, onChange) {
         var startY = 0, startScroll = 0, isDragging = false;
         wheel.addEventListener('mousedown', function(e) {
             isDragging = true; startY = e.clientY; startScroll = wheel.scrollTop; e.preventDefault();
@@ -1460,11 +1731,11 @@
             wheel.scrollTop = startScroll - (e.clientY - startY);
         });
         document.addEventListener('mouseup', function() {
-            if (!isDragging) return; isDragging = false; snapWheel(wheel, onChange);
+            if (!isDragging) return; isDragging = false; snapWheel(wheel, count, onChange);
         });
     }
 
-    function snapWheel(wheel, onChange) {
+    function snapWheel(wheel, count, onChange) {
         var items = wheel.querySelectorAll('.tp-wheel-item');
         if (!items.length) return;
         var center = wheel.scrollTop + wheel.clientHeight / 2;
@@ -1475,10 +1746,14 @@
             if (dist < minDist) { minDist = dist; closest = item; }
         });
         if (closest) {
+            var val = parseInt(closest.dataset.val);
             items.forEach(function(i){ i.classList.remove('selected'); });
-            closest.classList.add('selected');
-            onChange(parseInt(closest.dataset.val));
-            wheel.scrollTop = closest.offsetTop - (wheel.clientHeight / 2 - 22);
+            // 给所有同 data-val 的项加 selected
+            wheel.querySelectorAll('.tp-wheel-item[data-val="' + val + '"]').forEach(function(i){ i.classList.add('selected'); });
+            onChange(val);
+            wheel.scrollTop = closest.offsetTop - (wheel.clientHeight / 2 - ITEM_HEIGHT / 2);
+            // 循环检测：如果偏离太远则静默重置
+            ensureLoopPosition(wheel, count, onChange);
         }
     }
 
@@ -1569,6 +1844,13 @@
             return;
         }
 
+        // 点击洞察卡片刷新
+        var insightCard = t.closest('.insight-card');
+        if (insightCard) {
+            renderInsight();
+            return;
+        }
+
         if (id === 'btnAddMain' || id === 'btnAdd') {
             openAddRecordModal();
             return;
@@ -1652,6 +1934,25 @@
             var n = tabBtn.dataset.tab;
             document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===n); });
             document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.toggle('active', t.id==='tab-'+n); });
+            // 切到统计 tab 时，滚动热力图到当前月
+            if (n === 'stats') {
+                setTimeout(function() {
+                    var hc = document.getElementById('heatmapYear');
+                    if (!hc) return;
+                    var blocks = hc.querySelectorAll('.heatmap-month-block');
+                    if (!blocks.length) return;
+                    var cur = new Date().getMonth();
+                    var tgt = blocks[cur];
+                    if (!tgt) return;
+                    var cw = hc.clientWidth, sw = hc.scrollWidth;
+                    console.log('[HeatmapTab] cw=' + cw + ' sw=' + sw + ' offL=' + tgt.offsetLeft + ' bW=' + tgt.offsetWidth);
+                    if (sw > cw && cw > 0) {
+                        hc.scrollLeft = tgt.offsetLeft - (cw / 2) + (tgt.offsetWidth / 2);
+                    } else if (typeof tgt.scrollIntoView === 'function') {
+                        tgt.scrollIntoView({ behavior: 'instant', inline: 'center', block: 'nearest' });
+                    }
+                }, 200);
+            }
             return;
         }
 
@@ -2092,12 +2393,21 @@
         var barRect = bar.getBoundingClientRect();
         // 水平：按钮左边界减去容器左边界的偏移
         var left = rect.left - barRect.left + bar.scrollLeft;
-        panel.style.left = left + 'px';
         // 垂直：按钮底部相对容器顶部偏移
         var top = rect.bottom - barRect.top + bar.scrollTop + 4;
+        panel.style.left = left + 'px';
         panel.style.top = top + 'px';
         panel.style.display = 'block';
         panel.classList.add('active');
+        // 检测右溢出并左移修正
+        var panelRect = panel.getBoundingClientRect();
+        var viewportW = window.innerWidth;
+        var overflow = panelRect.right - viewportW;
+        if (overflow > 0) {
+            left = left - overflow - 4;
+            if (left < 0) left = 4;
+            panel.style.left = left + 'px';
+        }
     }
     function hideFilterPanel() {
         var panel = $('filterOptionsPanel');

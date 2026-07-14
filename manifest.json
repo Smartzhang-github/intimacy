@@ -1,9 +1,9 @@
 {
   "domain": "intimacy",
   "name": "亲密空间",
-  "version": "5.3.0",
-  "documentation": "https://github.com/home-assistant/example-custom-config",
-  "issue_tracker": "https://github.com/home-assistant/example-custom-config/issues",
+  "version": "5.4.0",
+  "documentation": "https://github.com/Smartzhang-github/intimacy",
+  "issue_tracker": "https://github.com/Smartzhang-github/intimacy/issues",
   "dependencies": [],
   "requirements": [],
   "codeowners": [],
