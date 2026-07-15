@@ -2,13 +2,13 @@
 (function() {
     'use strict';
     var API = '/intimacy_data';
-    var VERSION = '5.4.1';
+    var VERSION = '5.5.0';
 
     // 全局状态
     var state = {
         records: [],
         periods: [],
-        settings: {cycle_length:28, period_length:5, safe_period_days:7, ovulation_buffer_days:5},
+        settings: {cycle_length:28, period_length:5, safe_period_days:7, ovulation_buffer_days:5, quick_stats:['total_count','month_count','year_count','avg_pleasure']},
         stats: {},
         currentMonth: new Date(),
         editingRecordId: null,
@@ -86,13 +86,59 @@
         });
     }
 
-    // ── 快捷统计 ──
+    // ── 快捷统计（动态渲染） ──
+    var STAT_DEFS = [
+        {key:'total_count',      label:'总次数',     unit:'',  fmt:'int'},
+        {key:'month_count',      label:'本月',       unit:'',  fmt:'int'},
+        {key:'year_count',       label:'今年',       unit:'',  fmt:'int'},
+        {key:'week_count',       label:'本周',       unit:'',  fmt:'int'},
+        {key:'avg_pleasure',     label:'均愉悦',     unit:'',  fmt:'dec1'},
+        {key:'avg_satisfaction', label:'均满意',     unit:'',  fmt:'dec1'},
+        {key:'avg_duration',     label:'均时长',     unit:'分', fmt:'int'},
+        {key:'streak',           label:'连续',       unit:'天', fmt:'int'},
+        {key:'max_duration',     label:'最长',       unit:'分', fmt:'int'},
+        {key:'last_date',        label:'距上次',     unit:'天', fmt:'int'}
+    ];
+    function _statValue(s, key) {
+        if (key === 'last_date') {
+            if (!s.last_record_date) return 0;
+            var d1 = new Date(s.last_record_date);
+            var d2 = new Date();
+            return Math.max(0, Math.floor((d2 - d1) / 86400000));
+        }
+        if (key === 'streak') {
+            if (!state.records || !state.records.length) return 0;
+            var dates = state.records.map(function(r){return r.date;}).filter(Boolean).sort();
+            var uniq = []; for (var i=0;i<dates.length;i++) if (uniq.indexOf(dates[i])<0) uniq.push(dates[i]);
+            if (!uniq.length) return 0;
+            var max=1,cur=1; for (var j=1;j<uniq.length;j++){var a=new Date(uniq[j-1]),b=new Date(uniq[j]);if((b-a)===86400000){cur++;if(cur>max)max=cur;}else cur=1;}
+            return max;
+        }
+        return s[key] || 0;
+    }
+    function _formatStat(val, fmt) {
+        if (fmt === 'dec1') return Number(val).toFixed(1);
+        return String(val);
+    }
     function renderQuickStats() {
         var s = state.stats;
-        $('qsTotal').textContent = s.total_count || 0;
-        $('qsMonth').textContent = s.month_count || 0;
-        $('qsYear').textContent = s.year_count || 0;
-        $('qsAvg').textContent = s.avg_pleasure || 0;
+        var cfg = (state.settings && state.settings.quick_stats) || ['total_count','month_count','year_count','avg_pleasure'];
+        var keys = cfg.slice(0,4);
+        while (keys.length < 4) keys.push('total_count');
+        var container = $('quickStats');
+        if (!container) return;
+        var html = '';
+        for (var i=0; i<keys.length; i++) {
+            var def = null;
+            for (var k=0;k<STAT_DEFS.length;k++) if (STAT_DEFS[k].key===keys[i]) {def=STAT_DEFS[k]; break;}
+            if (!def) def = STAT_DEFS[0];
+            var v = _statValue(s, def.key);
+            html += '<div class="quick-stat">'
+                  +   '<span class="qs-value">' + _formatStat(v, def.fmt) + (def.unit ? '<span class="qs-unit">'+def.unit+'</span>' : '') + '</span>'
+                  +   '<span class="qs-label">' + def.label + '</span>'
+                  + '</div>';
+        }
+        container.innerHTML = html;
         renderInsight();
     }
 
@@ -1133,6 +1179,15 @@
         $('periodLength').value = s.period_length || 5;
         $('safePeriodDays').value = s.safe_period_days || 7;
         $('ovulationBuffer').value = s.ovulation_buffer_days || 5;
+
+        // 首页统计指标 - 同步到下拉框
+        var qsCfg = (s.quick_stats && s.quick_stats.length === 4)
+            ? s.quick_stats
+            : ['total_count', 'month_count', 'year_count', 'avg_pleasure'];
+        var qsSels = document.querySelectorAll('.stats-select');
+        for (var qi = 0; qi < qsSels.length && qi < qsCfg.length; qi++) {
+            qsSels[qi].value = qsCfg[qi];
+        }
     }
 
     // ── 筛选选项 ──
@@ -1506,11 +1561,18 @@
     }
 
     function doSaveSettings() {
+                var selsAll = document.querySelectorAll('.stats-select');
+                var qsArr = [];
+                for (var qi=0; qi<selsAll.length && qi<4; qi++) {
+                    qsArr.push(selsAll[qi].value || 'total_count');
+                }
+                while (qsArr.length < 4) qsArr.push('total_count');
         var settings = {
             cycle_length: Math.max(20, Math.min(45, parseInt($('cycleLength').value))) || 28,
             period_length: Math.max(2, Math.min(10, parseInt($('periodLength').value))) || 5,
             safe_period_days: Math.max(3, Math.min(14, parseInt($('safePeriodDays').value))) || 7,
             ovulation_buffer_days: Math.max(2, Math.min(10, parseInt($('ovulationBuffer').value))) || 5,
+            quick_stats: qsArr
         };
         apiPost('update_settings', {settings: settings}).then(function() {
             state.settings = settings;

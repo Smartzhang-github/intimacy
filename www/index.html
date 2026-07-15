@@ -146,6 +146,7 @@
 <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
 <symbol id="icon-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
 <symbol id="icon-database" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></symbol>
+<symbol id="icon-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></symbol>
 </svg>
 
 <div id="app">
@@ -201,25 +202,8 @@
         </div>
     </section>
 
-    <!-- 快捷统计 -->
-    <section class="quick-stats" id="quickStats">
-        <div class="quick-stat">
-            <span class="qs-value" id="qsTotal">0</span>
-            <span class="qs-label">总次数</span>
-        </div>
-        <div class="quick-stat">
-            <span class="qs-value" id="qsMonth">0</span>
-            <span class="qs-label">本月</span>
-        </div>
-        <div class="quick-stat">
-            <span class="qs-value" id="qsYear">0</span>
-            <span class="qs-label">今年</span>
-        </div>
-        <div class="quick-stat">
-            <span class="qs-value" id="qsAvg">0</span>
-            <span class="qs-label">均愉悦</span>
-        </div>
-    </section>
+    <!-- 快捷统计（动态渲染） -->
+    <section class="quick-stats" id="quickStats"></section>
 
     <!-- 标签栏 -->
     <nav class="tab-bar">
@@ -487,6 +471,72 @@
                 <div class="form-group">
                     <label>易孕期缓冲（天）</label>
                     <input type="number" id="ovulationBuffer" min="2" max="10" value="5">
+                </div>
+
+                <div class="form-group">
+                    <label><svg class="icon"><use href="#icon-grid"/></svg> 首页统计指标</label>
+                    <div class="stats-picker" id="statsPicker">
+                        <div class="stats-picker-row">
+                            <span class="stats-picker-label">第1个</span>
+                            <select class="stats-select" data-slot="0">
+                                <option value="total_count">总次数</option>
+                                <option value="month_count">本月次数</option>
+                                <option value="year_count">本年次数</option>
+                                <option value="week_count">本周次数</option>
+                                <option value="avg_pleasure">平均愉悦</option>
+                                <option value="avg_satisfaction">平均满意</option>
+                                <option value="avg_duration">平均时长(分)</option>
+                                <option value="streak">连续天数</option>
+                                <option value="max_duration">最长时长(分)</option>
+                                <option value="last_date">距上次(天)</option>
+                            </select>
+                        </div>
+                        <div class="stats-picker-row">
+                            <span class="stats-picker-label">第2个</span>
+                            <select class="stats-select" data-slot="1">
+                                <option value="total_count">总次数</option>
+                                <option value="month_count">本月次数</option>
+                                <option value="year_count">本年次数</option>
+                                <option value="week_count">本周次数</option>
+                                <option value="avg_pleasure">平均愉悦</option>
+                                <option value="avg_satisfaction">平均满意</option>
+                                <option value="avg_duration">平均时长(分)</option>
+                                <option value="streak">连续天数</option>
+                                <option value="max_duration">最长时长(分)</option>
+                                <option value="last_date">距上次(天)</option>
+                            </select>
+                        </div>
+                        <div class="stats-picker-row">
+                            <span class="stats-picker-label">第3个</span>
+                            <select class="stats-select" data-slot="2">
+                                <option value="total_count">总次数</option>
+                                <option value="month_count">本月次数</option>
+                                <option value="year_count">本年次数</option>
+                                <option value="week_count">本周次数</option>
+                                <option value="avg_pleasure">平均愉悦</option>
+                                <option value="avg_satisfaction">平均满意</option>
+                                <option value="avg_duration">平均时长(分)</option>
+                                <option value="streak">连续天数</option>
+                                <option value="max_duration">最长时长(分)</option>
+                                <option value="last_date">距上次(天)</option>
+                            </select>
+                        </div>
+                        <div class="stats-picker-row">
+                            <span class="stats-picker-label">第4个</span>
+                            <select class="stats-select" data-slot="3">
+                                <option value="total_count">总次数</option>
+                                <option value="month_count">本月次数</option>
+                                <option value="year_count">本年次数</option>
+                                <option value="week_count">本周次数</option>
+                                <option value="avg_pleasure">平均愉悦</option>
+                                <option value="avg_satisfaction">平均满意</option>
+                                <option value="avg_duration">平均时长(分)</option>
+                                <option value="streak">连续天数</option>
+                                <option value="max_duration">最长时长(分)</option>
+                                <option value="last_date">距上次(天)</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group">

@@ -12,11 +12,11 @@
   <a href="https://www.home-assistant.io/">
     <img src="https://img.shields.io/badge/Home%20Assistant-2024.1+-41BDF5?logo=home-assistant&logoColor=white" alt="Home Assistant">
   </a>
-  <a href="https://github.com/Smartzhang-github/intimacy/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/Smartzhang-github/intimacy" alt="License">
+  <a href="https://github.com/771849605/intimacy_v10/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/771849605/intimacy_v10" alt="License">
   </a>
-  <a href="https://github.com/Smartzhang-github/intimacy/releases">
-    <img src="https://img.shields.io/github/v/release/Smartzhang-github/intimacy" alt="Release">
+  <a href="https://github.com/771849605/intimacy_v10/releases">
+    <img src="https://img.shields.io/github/v/release/771849605/intimacy_v10" alt="Release">
   </a>
 </p>
 
@@ -70,7 +70,7 @@
 
 1. 打开 HACS → 集成
 2. 点击右上角三点菜单 → 自定义存储库
-3. 输入仓库地址：`https://github.com/Smartzhang-github/intimacy`
+3. 输入仓库地址：`https://github.com/771849605/intimacy_v10`
 4. 选择类别为「集成」
 5. 重启 Home Assistant
 6. 设置 → 设备与服务 → 添加集成 → 搜索「亲密空间」
@@ -78,7 +78,7 @@
 ### 方法二：手动安装
 
 1. 下载最新 Release
-2. 解压到 `config/custom_components/intimacy/`
+2. 解压到 `config/custom_components/intimacy_v10/`
 3. 重启 Home Assistant
 4. 设置 → 设备与服务 → 添加集成 → 搜索「亲密空间」
 
@@ -87,7 +87,7 @@
 ## 📁 文件结构
 
 ```
-intimacy/
+intimacy_v10/
 ├── __init__.py          # 主集成文件（HTTP API）
 ├── config_flow.py       # 配置流程
 ├── const.py             # 常量定义
@@ -95,8 +95,6 @@ intimacy/
 ├── sensor.py            # 传感器实体
 ├── icon.png             # 集成图标
 ├── icon.svg             # 集成图标（SVG）
-├── brand/               # 品牌资源
-├── icons/               # 图标资源
 └── www/
     ├── index.html       # 前端页面
     ├── app.js           # 前端逻辑
@@ -163,19 +161,13 @@ intimacy/
 ### 本地开发
 
 1. 克隆仓库
-2. 将 `intimacy` 文件夹复制到 Home Assistant 的 `config/custom_components/` 目录
+2. 将 `intimacy_v10` 文件夹复制到 Home Assistant 的 `config/custom_components/` 目录
 3. 重启 Home Assistant
 4. 修改代码后刷新浏览器查看效果
 
 ---
 
 ## 📝 更新日志
-
-### v5.4.0 (2026-07-14)
-- 🔧 前端界面优化
-
-### v5.3.0 (2026-07-10)
-- 📦 整理上传至 GitHub
 
 ### v5.0.0 (2026-07-09)
 - ✨ 新增浮动爱心背景动画
@@ -220,7 +212,7 @@ intimacy/
 
 如果你觉得这个项目有用，请给个 ⭐ Star 支持一下！
 
-有问题或建议？请 [提交 Issue](https://github.com/Smartzhang-github/intimacy/issues)
+有问题或建议？请 [提交 Issue](https://github.com/771849605/intimacy_v10/issues)
 
 ---
 
