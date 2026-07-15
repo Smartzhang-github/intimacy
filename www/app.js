@@ -1200,10 +1200,8 @@
             var hasMast = cats.indexOf('masturbation') !== -1;
             var hasDream = cats.indexOf('dream') !== -1;
             var count = cats.length;
-            var cat = hasSex ? 'sex' : (hasMast ? 'mast' : (hasDream ? 'dream' : ''));
-            var catLabel = {sex:'做爱',masturbation:'自慰',dream:'春梦'}[cat] || '';
+            var catLabel = hasSex ? '做爱' : (hasMast ? '自慰' : (hasDream ? '春梦' : ''));
             var cls = count === 0 ? 'level-0' : count <= 3 ? 'level-1' : count <= 8 ? 'level-2' : 'level-3';
-            if (cat) cls = 'cat-' + cat;
             html += '<div class="h-cell '+cls+(isToday?' today':'')+'" title="'+ds+(cat?(' · '+catLabel):'')+'"></div>';
         }
 
