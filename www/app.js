@@ -1184,6 +1184,11 @@
         var daysInMonth = new Date(year, month + 1, 0).getDate();
         var html = '';
 
+        // 颜色映射
+        var COLORS = { sex: '#ff6fa8', masturbation: '#b78bff', dream: '#29b6f6' };
+        var LABELS = { sex: '做爱', masturbation: '自慰', dream: '春梦' };
+        var CAT_ORDER = ['sex', 'masturbation', 'dream'];
+
         for (var i = 0; i < startPad; i++) {
             html += '<div class="h-cell empty"></div>';
         }
@@ -1192,20 +1197,38 @@
         for (var d = 1; d <= daysInMonth; d++) {
             var ds = year + '-' + String(month+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
             var isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-            // 类别判定：该天是否有做爱/自慰
-            var cats = state.records
+
+            // 收集当日去重类别
+            var rawCats = state.records
                 .filter(function(r){ return r.date === ds; })
                 .map(function(r){ return r.category || 'sex'; });
-            var hasSex = cats.indexOf('sex') !== -1;
-            var hasMast = cats.indexOf('masturbation') !== -1;
-            var hasDream = cats.indexOf('dream') !== -1;
-            var count = cats.length;
-            var catLabel = hasSex ? '做爱' : (hasMast ? '自慰' : (hasDream ? '春梦' : ''));
-            var cls = count === 0 ? 'level-0' : count <= 3 ? 'level-1' : count <= 8 ? 'level-2' : 'level-3';
-            html += '<div class="h-cell '+cls+(isToday?' today':'')+'" title="'+ds+(catLabel?(' · '+catLabel):'')+'"></div>';
+            var uniqCats = [];
+            CAT_ORDER.forEach(function(c){ if (rawCats.indexOf(c) !== -1 && uniqCats.indexOf(c) === -1) uniqCats.push(c); });
+
+n            // tooltip 文本
+            var catLabel = uniqCats.map(function(c){ return LABELS[c]; }).join('+') || '';
+            var titleAttr = ds + (catLabel ? ' · ' + catLabel : '');
+
+n            // 构建 class + CSS 变量
+            var cls = 'h-cell';
+            var style = '';
+            if (uniqCats.length === 0) {
+                cls += ' empty';
+            } else if (uniqCats.length === 1) {
+                cls += ' cat-' + uniqCats[0];
+            } else if (uniqCats.length === 2) {
+                cls += ' cat-split-2';
+                style = ' style="--cat-a:' + COLORS[uniqCats[0]] + ';--cat-b:' + COLORS[uniqCats[1]] + '"';
+            } else {
+                cls += ' cat-split-3';
+                style = ' style="--cat-a:' + COLORS[uniqCats[0]] + ';--cat-b:' + COLORS[uniqCats[1]] + ';--cat-c:' + COLORS[uniqCats[2]] + '"';
+            }
+            if (isToday) cls += ' today';
+
+            html += '<div class="' + cls + '"' + style + ' title="' + titleAttr + '"></div>';
         }
 
-        // 补足末尾空行，使所有月份统一为 6 行（42 格），下方次数对齐
+        // 补足末尾空行，使所有月份统一为 6 行（42 格）
         var totalCells = startPad + daysInMonth;
         var targetCells = 42;
         var padCount = targetCells - totalCells;
