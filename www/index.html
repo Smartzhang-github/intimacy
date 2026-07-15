@@ -151,23 +151,13 @@
 
 <div id="app">
 
-    <!-- 顶部 -->
-    <header class="app-header">
-        <div class="header-left">
-            <h1><svg class="icon icon-lg"><use href="#icon-heart"/></svg> 亲密空间</h1>
-        </div>
-        <div class="header-right">
-            <button class="btn-safe-badge" id="btnSafeBadge" title="当前安全期状态">
-                <span id="safeStatusIcon"><svg class="icon"><use href="#icon-circle"/></svg></span>
-                <span id="safeStatusText">计算中</span>
-            </button>
-            <button class="btn-add-main" id="btnAddMain" title="添加记录">+</button>
-        </div>
-    </header>
-
     <!-- 计时器 -->
     <section class="timer-section" id="timerSection">
         <div class="timer-card" id="timerCard">
+            <button class="btn-safe-badge timer-safe-badge" id="btnSafeBadge" title="当前安全期状态">
+                <span id="safeStatusIcon"><svg class="icon"><use href="#icon-circle"/></svg></span>
+                <span id="safeStatusText">计算中</span>
+            </button>
             <div class="timer-crosshair"></div>
             <div class="timer-float-hearts">
                 <span class="fh">&#10084;</span>
@@ -184,6 +174,7 @@
             <div class="timer-label" id="timerLabel">准备就绪</div>
             <div class="timer-actions">
                 <button class="timer-btn timer-start" id="timerStart">开始计时</button>
+                <button class="timer-btn timer-add" id="btnAddMain" title="添加记录">+ 添加</button>
                 <button class="timer-btn timer-stop" id="timerStop" style="display:none;">结束并记录</button>
                 <button class="timer-btn timer-cancel" id="timerCancel" style="display:none;">取消</button>
             </div>
@@ -476,8 +467,19 @@
                 <div class="form-group">
                     <label><svg class="icon"><use href="#icon-grid"/></svg> 首页统计指标</label>
                     <div class="stats-picker" id="statsPicker">
-                        <div class="stats-picker-row">
-                            <span class="stats-picker-label">第1个</span>
+                        <!-- 共用类别过滤 -->
+                        <div class="qs-cat-row">
+                            <span class="qs-cat-row-label">类别</span>
+                            <div class="qs-cats" id="statsCatPicker">
+                                <label class="qs-cat"><input type="checkbox" class="qs-cat-all" data-val="all" checked> 全部</label>
+                                <label class="qs-cat"><input type="checkbox" class="qs-cat-val" data-val="sex" checked> 做爱</label>
+                                <label class="qs-cat"><input type="checkbox" class="qs-cat-val" data-val="masturbation"> 自慰</label>
+                                <label class="qs-cat"><input type="checkbox" class="qs-cat-val" data-val="dream"> 春梦</label>
+                            </div>
+                        </div>
+                        <!-- 4个指标 -->
+                        <div class="stats-metric-row">
+                            <span class="stats-metric-label">第1个</span>
                             <select class="stats-select" data-slot="0">
                                 <option value="total_count">总次数</option>
                                 <option value="month_count">本月次数</option>
@@ -491,8 +493,8 @@
                                 <option value="last_date">距上次(天)</option>
                             </select>
                         </div>
-                        <div class="stats-picker-row">
-                            <span class="stats-picker-label">第2个</span>
+                        <div class="stats-metric-row">
+                            <span class="stats-metric-label">第2个</span>
                             <select class="stats-select" data-slot="1">
                                 <option value="total_count">总次数</option>
                                 <option value="month_count">本月次数</option>
@@ -506,8 +508,8 @@
                                 <option value="last_date">距上次(天)</option>
                             </select>
                         </div>
-                        <div class="stats-picker-row">
-                            <span class="stats-picker-label">第3个</span>
+                        <div class="stats-metric-row">
+                            <span class="stats-metric-label">第3个</span>
                             <select class="stats-select" data-slot="2">
                                 <option value="total_count">总次数</option>
                                 <option value="month_count">本月次数</option>
@@ -521,8 +523,8 @@
                                 <option value="last_date">距上次(天)</option>
                             </select>
                         </div>
-                        <div class="stats-picker-row">
-                            <span class="stats-picker-label">第4个</span>
+                        <div class="stats-metric-row">
+                            <span class="stats-metric-label">第4个</span>
                             <select class="stats-select" data-slot="3">
                                 <option value="total_count">总次数</option>
                                 <option value="month_count">本月次数</option>

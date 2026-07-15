@@ -2,7 +2,7 @@
 (function() {
     'use strict';
     var API = '/intimacy_data';
-    var VERSION = '5.5.0';
+    var VERSION = '5.6.0';
 
     // 全局状态
     var state = {
@@ -79,6 +79,7 @@
             renderStats();
             renderPeriods();
             updateSettingsForm();
+            bindStatsCatUI();
             updateSafeBadge();
             buildFilterOptions();
         }).catch(function(e) {
@@ -120,11 +121,84 @@
         if (fmt === 'dec1') return Number(val).toFixed(1);
         return String(val);
     }
+    // 共用类别过滤
+    var CATEGORY_LABELS = {all:'全部', sex:'做爱', masturbation:'自慰', dream:'春梦'};
+
+    function _getQuickStatsCats() {
+        var cats = state.settings && state.settings.quick_stats_cats;
+        if (!cats || !cats.length) return ['all'];
+        return cats;
+    }
+    function _filterRecordsByCats(records, cats) {
+        if (!cats || cats.indexOf('all') >= 0) return records || [];
+        return (records || []).filter(function(r){
+            return cats.indexOf(r.category || 'sex') >= 0;
+        });
+    }
+    function _statValueFiltered(s, key, recs) {
+        if (!recs || !recs.length) {
+            if (key === 'streak' || key === 'last_date' || key === 'max_duration') return 0;
+            if (key === 'avg_pleasure' || key === 'avg_satisfaction') return 0;
+            if (key === 'avg_duration') return 0;
+            return 0;
+        }
+        if (key === 'last_date') {
+            var dates = recs.map(function(r){return r.date;}).filter(Boolean).sort().reverse();
+            if (!dates.length) return 0;
+            var d1 = new Date(dates[0]), d2 = new Date();
+            return Math.max(0, Math.floor((d2 - d1) / 86400000));
+        }
+        if (key === 'streak') {
+            var dates2 = recs.map(function(r){return r.date;}).filter(Boolean).sort();
+            var uniq = []; for (var i=0;i<dates2.length;i++) if (uniq.indexOf(dates2[i])<0) uniq.push(dates2[i]);
+            if (!uniq.length) return 0;
+            var max=1,cur=1; for (var j=1;j<uniq.length;j++){var a=new Date(uniq[j-1]),b=new Date(uniq[j]);if((b-a)===86400000){cur++;if(cur>max)max=cur;}else cur=1;}
+            return max;
+        }
+        if (key === 'max_duration') {
+            var mx = 0; for (var k=0;k<recs.length;k++){var d=parseInt(recs[k].duration)||0; if(d>mx)mx=d;}
+            return mx;
+        }
+        if (key === 'avg_pleasure' || key === 'avg_satisfaction') {
+            var sum=0,cnt=0; for (var m=0;m<recs.length;m++){var v=recs[m][key]; if(typeof v==='number'){sum+=v;cnt++;}}
+            return cnt ? Math.round((sum/cnt)*10)/10 : 0;
+        }
+        if (key === 'avg_duration') {
+            var sum=0,cnt=0; for (var m2=0;m2<recs.length;m2++){var v2=parseInt(recs[m2].duration)||0; if(v2>0){sum+=v2;cnt++;}}
+            return cnt ? Math.round(sum/cnt) : 0;
+        }
+        // 次数类（根据类别过滤后重算）
+        var now = new Date();
+        var y = now.getFullYear(), mo = now.getMonth();
+        var day = now.getDay() || 7;
+        var monday = new Date(now); monday.setDate(now.getDate() - (day-1)); monday.setHours(0,0,0,0);
+        var cnt2 = 0;
+        for (var n=0;n<recs.length;n++){
+            if (!recs[n].date) continue;
+            var dd = new Date(recs[n].date);
+            if (key === 'total_count') cnt2++;
+            else if (key === 'year_count' && dd.getFullYear() === y) cnt2++;
+            else if (key === 'month_count' && dd.getFullYear() === y && dd.getMonth() === mo) cnt2++;
+            else if (key === 'week_count' && dd >= monday) cnt2++;
+        }
+        return cnt2;
+    }
+    function _suffixLabel(cats) {
+        if (!cats || !cats.length || cats.indexOf('all') >= 0) return '';
+        var names = cats.map(function(c){return CATEGORY_LABELS[c] || c;});
+        return ' · ' + names.join('/');
+    }
+    function _formatStat(val, fmt) {
+        if (fmt === 'dec1') return Number(val).toFixed(1);
+        return String(val);
+    }
     function renderQuickStats() {
         var s = state.stats;
         var cfg = (state.settings && state.settings.quick_stats) || ['total_count','month_count','year_count','avg_pleasure'];
         var keys = cfg.slice(0,4);
         while (keys.length < 4) keys.push('total_count');
+        var cats = _getQuickStatsCats();
+        var filteredRecs = _filterRecordsByCats(state.records, cats);
         var container = $('quickStats');
         if (!container) return;
         var html = '';
@@ -132,7 +206,7 @@
             var def = null;
             for (var k=0;k<STAT_DEFS.length;k++) if (STAT_DEFS[k].key===keys[i]) {def=STAT_DEFS[k]; break;}
             if (!def) def = STAT_DEFS[0];
-            var v = _statValue(s, def.key);
+            var v = _statValueFiltered(s, def.key, filteredRecs);
             html += '<div class="quick-stat">'
                   +   '<span class="qs-value">' + _formatStat(v, def.fmt) + (def.unit ? '<span class="qs-unit">'+def.unit+'</span>' : '') + '</span>'
                   +   '<span class="qs-label">' + def.label + '</span>'
@@ -140,6 +214,29 @@
         }
         container.innerHTML = html;
         renderInsight();
+    }
+    function bindStatsCatUI() {
+        var wrap = $('statsCatPicker');
+        if (!wrap) return;
+        var allBox  = wrap.querySelector('.qs-cat-all');
+        var valBoxes = wrap.querySelectorAll('.qs-cat-val');
+        function sync() {
+            var anyChecked = false;
+            for (var c=0;c<valBoxes.length;c++) if (valBoxes[c].checked) {anyChecked=true; break;}
+            allBox.checked = !anyChecked;
+            wrap.classList.toggle('all-on', !anyChecked);
+        }
+        allBox.addEventListener('change', function(){
+            if (allBox.checked) {
+                for (var b=0;b<valBoxes.length;b++) valBoxes[b].checked = false;
+                wrap.classList.add('all-on');
+            } else {
+                wrap.classList.remove('all-on');
+            }
+        });
+        for (var v=0;v<valBoxes.length;v++) {
+            valBoxes[v].addEventListener('change', sync);
+        }
     }
 
     // ═══════════════════════════════════════════════
@@ -166,17 +263,57 @@
         $('insightTitle').textContent = title;
         $('insightText').textContent = text;
     }
-    function generateInsightText(s) {
-        var mc = (s && s.month_count) || 0;
+    function generateInsightText(s, filteredRecs) {
+        // 如果有类别过滤，则从 filteredRecs 重新计算相关统计
+        var s2 = s;
+        if (filteredRecs && filteredRecs.length !== (state.records && state.records.length)) {
+            var now = new Date();
+            var curY = now.getFullYear();
+            var curM = now.getMonth();
+            var totalPleasure = 0, cntP = 0, totalDur = 0, cntD = 0;
+            var posSet = {}, moodSet = {}, methSet = {};
+            for (var ri = 0; ri < filteredRecs.length; ri++) {
+                var r = filteredRecs[ri];
+                var d = new Date(r.date);
+                if (d.getFullYear() === curY && d.getMonth() === curM) { cntP++; totalPleasure += (r.pleasure || 0); }
+                totalDur += (r.duration || 0); cntD++;
+                if (r.position) { var ps = Array.isArray(r.position) ? r.position : [r.position]; for (var pi = 0; pi < ps.length; pi++) if (ps[pi]) posSet[ps[pi]] = true; }
+                if (r.mood)    { var ms = Array.isArray(r.mood)    ? r.mood    : [r.mood];    for (var mi = 0; mi < ms.length; mi++) if (ms[mi]) moodSet[ms[mi]] = true; }
+                if (r.method)  { var mt = Array.isArray(r.method)  ? r.method  : [r.method];  for (var ti = 0; ti < mt.length; ti++) if (mt[ti]) methSet[mt[ti]] = true; }
+            }
+            var monthFiltered = filteredRecs.filter(function(r){ var d=new Date(r.date); return d.getFullYear()===curY && d.getMonth()===curM; });
+            s2 = {
+                month_count: monthFiltered.length,
+                avg_pleasure: cntP > 0 ? totalPleasure/cntP : 0,
+                avg_duration: cntD > 0 ? totalDur/cntD : 0,
+                total_count: filteredRecs.length,
+                positions: posSet,
+                moods: moodSet,
+                methods: methSet,
+                is_safe_period: s && s.is_safe_period,
+                period_phase: s && s.period_phase
+            };
+        }
+        var mc = (s2 && s2.month_count) || 0;
+        var ap = (s2 && s2.avg_pleasure) || 0;
+        var ad = (s2 && s2.avg_duration) || 0;
+        var safe = s2 && s2.is_safe_period;
+        var phase = s2 && s2.period_phase;
+        var total = (s2 && s2.total_count) || 0;
+        var positions = s2 && s2.positions;
+        var posCount = positions ? Object.keys(positions).length : 0;
+        var moods = s2 && s2.moods;
+        var methods = s2 && s2.methods;
+        var methCount = methods ? Object.keys(methods).length : 0;
         var ap = (s && s.avg_pleasure) || 0;
         var ad = (s && s.avg_duration) || 0;
-        var safe = s && s.is_safe_period;
-        var phase = s && s.period_phase;
-        var total = (s && s.total_count) || 0;
-        var positions = s && s.positions;
+        var safe = s2 && s2.is_safe_period;
+        var phase = s2 && s2.period_phase;
+        var total = (s2 && s2.total_count) || 0;
+        var positions = s2 && s2.positions;
         var posCount = positions ? Object.keys(positions).length : 0;
-        var moods = s && s.moods;
-        var methods = s && s.methods;
+        var moods = s2 && s2.moods;
+        var methods = s2 && s2.methods;
         var methCount = methods ? Object.keys(methods).length : 0;
         var happyMood = moods && (moods['happy'] || moods['romantic'] || moods['passionate']);
         var calmMood = moods && (moods['calm'] || moods['satisfied']);
@@ -295,7 +432,9 @@
     function renderInsight() {
         var s = state.stats;
         if (!s) return;
-        var tip = generateInsightText(s);
+        var cats = _getQuickStatsCats();
+        var filteredRecs = _filterRecordsByCats(state.records, cats);
+        var tip = generateInsightText(s, filteredRecs);
         if (!tip) return;
         _renderInsightCard(
             _getInsightIcon(tip.t),
@@ -1169,7 +1308,7 @@
         var isSafe = s && s.is_safe_period;
         $('safeStatusIcon').innerHTML = '<span class="status-dot ' + (isSafe ? 'safe' : 'danger') + '"></span>';
         $('safeStatusText').textContent = isSafe ? '安全期' : (s && s.total_count > 0 ? '易孕期' : '未知');
-        $('btnSafeBadge').className = 'btn-safe-badge ' + (isSafe ? 'safe' : 'fertile');
+        $('btnSafeBadge').className = 'btn-safe-badge timer-safe-badge ' + (isSafe ? 'safe' : 'fertile');
     }
 
     // ── 设置表单 ──
@@ -1181,12 +1320,25 @@
         $('ovulationBuffer').value = s.ovulation_buffer_days || 5;
 
         // 首页统计指标 - 同步到下拉框
+        // 同步 metric 下拉框
         var qsCfg = (s.quick_stats && s.quick_stats.length === 4)
             ? s.quick_stats
             : ['total_count', 'month_count', 'year_count', 'avg_pleasure'];
         var qsSels = document.querySelectorAll('.stats-select');
         for (var qi = 0; qi < qsSels.length && qi < qsCfg.length; qi++) {
             qsSels[qi].value = qsCfg[qi];
+        }
+        // 同步共用类别 checkbox
+        var wrap = $('statsCatPicker');
+        if (wrap) {
+            var cats = s.quick_stats_cats || ['all'];
+            var isAll = !cats || !cats.length || cats.indexOf('all') >= 0;
+            wrap.querySelector('.qs-cat-all').checked = isAll;
+            var valBoxes = wrap.querySelectorAll('.qs-cat-val');
+            for (var ci=0;ci<valBoxes.length;ci++) {
+                valBoxes[ci].checked = !isAll && cats.indexOf(valBoxes[ci].getAttribute('data-val')) >= 0;
+            }
+            wrap.classList.toggle('all-on', isAll);
         }
     }
 
@@ -1561,18 +1713,33 @@
     }
 
     function doSaveSettings() {
+                // 收集 4 个 metric
                 var selsAll = document.querySelectorAll('.stats-select');
                 var qsArr = [];
                 for (var qi=0; qi<selsAll.length && qi<4; qi++) {
                     qsArr.push(selsAll[qi].value || 'total_count');
                 }
                 while (qsArr.length < 4) qsArr.push('total_count');
+                // 收集共用类别
+                var saveCats = ['all'];
+                var wrap = $('statsCatPicker');
+                if (wrap) {
+                    if (!wrap.querySelector('.qs-cat-all').checked) {
+                        saveCats = [];
+                        var vbs = wrap.querySelectorAll('.qs-cat-val');
+                        for (var vi=0;vi<vbs.length;vi++) {
+                            if (vbs[vi].checked) saveCats.push(vbs[vi].getAttribute('data-val'));
+                        }
+                        if (!saveCats.length) saveCats = ['all'];
+                    }
+                }
         var settings = {
             cycle_length: Math.max(20, Math.min(45, parseInt($('cycleLength').value))) || 28,
             period_length: Math.max(2, Math.min(10, parseInt($('periodLength').value))) || 5,
             safe_period_days: Math.max(3, Math.min(14, parseInt($('safePeriodDays').value))) || 7,
             ovulation_buffer_days: Math.max(2, Math.min(10, parseInt($('ovulationBuffer').value))) || 5,
-            quick_stats: qsArr
+            quick_stats: qsArr,
+            quick_stats_cats: saveCats
         };
         apiPost('update_settings', {settings: settings}).then(function() {
             state.settings = settings;
