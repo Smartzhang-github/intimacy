@@ -1421,7 +1421,7 @@ body {
     padding-top: 8px;
     border-top: 1px solid var(--border);
 }
-.hm-none  { background: var(--h0); opacity: 0.5; }
+.hm-none  { background: rgba(128,128,128,0.15); }
 .hm-sex  { background: var(--cat-sex); }
 .hm-mast { background: var(--cat-mast); }
 .hm-dream { background: #29b6f6; }
@@ -1681,7 +1681,7 @@ body {
 }
 .heatmap-month-block {
     flex: 1;
-    min-width: 45px;
+    min-width: 55px;
     scroll-snap-align: center;
 }
 .month-label {
@@ -1703,7 +1703,7 @@ body {
     position: relative;
     overflow: hidden;
 }
-.h-cell.empty { background: var(--h0); opacity: 0.5; }
+.h-cell.empty { background: rgba(128,128,128,0.15); }
 .h-cell.today { box-shadow: inset 0 0 0 1.5px var(--primary); }
 /* 单类别 */
 .h-cell.cat-sex    { background: var(--cat-sex); }
