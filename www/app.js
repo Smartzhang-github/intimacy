@@ -1205,11 +1205,11 @@
             var uniqCats = [];
             CAT_ORDER.forEach(function(c){ if (rawCats.indexOf(c) !== -1 && uniqCats.indexOf(c) === -1) uniqCats.push(c); });
 
-n            // tooltip 文本
+            // tooltip 文本
             var catLabel = uniqCats.map(function(c){ return LABELS[c]; }).join('+') || '';
             var titleAttr = ds + (catLabel ? ' · ' + catLabel : '');
 
-n            // 构建 class + CSS 变量
+            // 构建 class + CSS 变量
             var cls = 'h-cell';
             var style = '';
             if (uniqCats.length === 0) {
