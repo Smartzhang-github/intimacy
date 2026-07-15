@@ -1202,7 +1202,7 @@
             var count = cats.length;
             var catLabel = hasSex ? '做爱' : (hasMast ? '自慰' : (hasDream ? '春梦' : ''));
             var cls = count === 0 ? 'level-0' : count <= 3 ? 'level-1' : count <= 8 ? 'level-2' : 'level-3';
-            html += '<div class="h-cell '+cls+(isToday?' today':'')+'" title="'+ds+(cat?(' · '+catLabel):'')+'"></div>';
+            html += '<div class="h-cell '+cls+(isToday?' today':'')+'" title="'+ds+(catLabel?(' · '+catLabel):'')+'"></div>';
         }
 
         // 补足末尾空行，使所有月份统一为 6 行（42 格），下方次数对齐
